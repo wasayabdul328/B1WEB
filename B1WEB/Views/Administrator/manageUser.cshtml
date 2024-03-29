@@ -47,7 +47,7 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="fixed-headertbody">
                           
 
                             </tbody>
@@ -154,6 +154,8 @@
     </div>
 </div>
 
+
+
 @section Script {
     <!--datatable js-->
 
@@ -172,7 +174,112 @@
     <script>
 
         $(document).ready(function () {
-            $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"] });
+            GetUserList();
         });
+        function GetUserList() {
+            var url = "/api/PortalUsers/GetAll";
+            debugger;
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (response) {
+
+                    if (response.code == 100) {
+
+                        var relist = response.data;
+                        var datatabl = $('#fixed-header').DataTable();
+                        datatabl.destroy();
+                        $("#fixed-headertbody").empty();
+                        if (relist != null && relist.length > 0) {
+                            var sr = 1;
+                            for (let list of relist) {
+                                var row = '<tr>' +
+                                    '<td>' + sr + '</td>' +
+                                    '<td>' + list.id + '</td>' +
+                                    '<td></td>' +
+                                    '<td>' + list.userName + '</td>' +
+                                    '<td>' + DateFormat(list.dob) + '</td>' +
+                                    '<td>' + list.cnic + '</td>' +
+                                    '<td>' + list.email + '</td>' +
+                                    '<td>' + list.phone + '</td>' +
+                                    '<td>' + DateFormat(list.createdOn) + '</td>' +
+                                    '<td> <a onclick="ViewUser(' + list.id + ')" class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2" "></i></a><a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a><a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a></td>' +
+                                    '</tr>';
+                                $("#fixed-headertbody").append(row);
+                                sr++;
+
+                            }
+
+                            $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"] });
+                        }
+                    }
+                }
+            });
+        }
+
+
+        function DateFormat(datedata){
+            var dateString = datedata;
+
+            // Create a new Date object from the input string
+            var date = new Date(dateString);
+
+            // Extract the date components
+            var year = date.getFullYear();
+            var month = ('0' + (date.getMonth() + 1)).slice(-2); // Adding 1 because getMonth() returns zero-based index
+            var day = ('0' + date.getDate()).slice(-2);
+
+            // Construct the desired format
+            var formattedDate = year + '-' + month + '-' + day;
+            return formattedDate;
+        }
+
+        function ViewUser(id) {
+            var url = "/api/PortalUsers/Get?id=" + id + "";
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: "json",
+                data: { id: id },
+                async: false,
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                    if (response.code === 100) {
+
+                        var data = response.data;
+                        let status = data.isActive == true ? "1" : "0";
+
+                        $("#myModal").modal("show");
+
+                        $("#ID").val(data.id);
+                        $("#username").val(data.username);
+                        $("#designation").val(data.desiG_DESC);
+                        $("#Department").val(data.departmenT_DESC);
+                        $("#Department").trigger('change');
+                        $("#fathername").val(data.emP_FATHER_NAM);
+                        $("#employeecode").val(data.emP_CODE);
+                        $("#employeename").val(data.emP_FULL_NAME);
+                        $("#cnic").val(data.niC_NO);
+                        $("#Status").val(status);
+                        $("#SubmitButton").text("Update");
+                        $("#myModalLabel").text("Edit User");
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Problem Finding User',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        });
+                    }
+                }
+            });
+        }
     </script>
 }
