@@ -1,0 +1,236 @@
+﻿@{
+    ViewData["Title"] = "Create Sales Order";
+}
+
+@section CSS {
+
+}
+
+
+
+<div class="container-fluid">
+    <div class="row">
+
+     
+   
+       <div class="card">
+           <div class="card-body">
+                @*    Header Fields Section Starts here*@
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label for="CardCode" class="form-label">Customer</label>
+                            <div class="input-group input-group">
+                                <span class="input-group-text"><i class="ri-file-list-fill"></i></span>
+                                <input type="text" id="CardCode" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+
+                            <label for="CardName" class="form-label">Customer Name</label>
+                            <input class="form-control" id="CardName" />
+
+                            <label for="ContactPerson" class="form-label">Contact Person</label>
+                            <div class="input-group input-group">
+                                <span class="input-group-text"><i class="ri-file-list-fill"></i></span>
+                                <input type="text" id="ContactPerson" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+
+                            <label for="CardName" class="form-label">Customer Ref No.</label>
+                            <input class="form-control" id="CustomerRefNo" />
+
+                        </div>
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="CardCode" class="form-label">Series</label>
+                                    <select class="form-control" id="Series">
+                                        <option>Primary</option>
+                                    </select>
+
+                                </div>
+                                <div class="col-6">
+                                    <label for="DocNum" class="form-label">No.</label>
+                                    <input id="DocNum" disabled class="form-control" />
+
+                                </div>
+                            </div>
+
+                            <label for="Status" class="form-label">Status</label>
+                            <input disabled class="form-control" value="Open" id="Status" />
+
+
+                            <label for="PostingDate" class="form-label">Posting Date</label>
+                            <input type="date" class="form-control" id="PostingDate" />
+
+
+                            <label for="DeliveryDate" class="form-label">Delivery Date</label>
+                            <input type="date" class="form-control" id="DeliveryDate" />
+
+
+
+                            <label for="DocumentyDate" class="form-label">Document Date</label>
+                            <input type="date" class="form-control" id="DocumentDate" />
+
+                        </div>
+
+                    </div>
+                </div>
+                @*  Header Fields Section Ends Here *@
+                <div class="col-12">
+                    <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#ContentsTab" role="tab" aria-selected="false">
+                                Contents
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#ContentsTab" role="tab" aria-selected="false">
+                                Logistics
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#AccountingTab" role="tab" aria-selected="false">
+                                Accounting
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#RemarksTab" role="tab" aria-selected="false">
+                                Remarks
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#ActivitiesTab" role="tab" aria-selected="false">
+                                Activities
+                            </a>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content">
+
+                        <div class="tab-pane active" id="ContentsTab" role="tabpanel">
+                            <partial name="~/Views/PartialLayouts/SaleOrder/_SaleOrderContentTab.cshtml"   />
+                        </div>
+
+
+                        <div class="tab-pane" id="LogisticsTab" role="tabpanel">
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label for="SalesEmployee" class="form-label">Sales Employee</label>
+                            <select class="form-control" id="SalesEmployee">
+                            </select>
+
+                            <label for="Owner" class="form-label">Owner</label>
+                            <select class="form-control" id="Owner">
+                            </select>
+
+                            <label for="Comment" class="form-label">Comment</label>
+                            <textarea rows="3" class="form-control"></textarea>
+
+                        </div>
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-5">
+                            <div class="row">
+                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <label for="TotalBeforeDiscount" class="form-label">Total Before Discount</label>
+                                    <input type="number" disabled class="form-control" id="TotalBeforeDiscount" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="DiscountPercent" class="form-label">Discount Percent</label>
+                                    <input type="number" class="form-control" id="DiscountPercent" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="DiscountAmount" class="form-label">Discount Amount</label>
+                                    <input type="number" class="form-control" id="DiscountAmount" />
+                                </div>
+                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <label for="TotalBeforeDiscount" class="form-label">Tax</label>
+                                    <input type="number" disabled class="form-control" id="Tax" />
+                                </div>
+                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <label for="TotalBeforeDiscount" class="form-label">Total</label>
+                                    <input type="number" disabled class="form-control" id="Total" />
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-12 mt-4 mb-4">
+                    <a style="float:right" class="btn btn-primary btn-sm">Submit</a>
+                    <a style="float:right" class="btn btn-danger btn-sm">Cancel</a>
+                </div>
+           </div>
+       </div>
+      
+
+    </div>
+</div>
+
+@section Script {
+  
+    <script>
+
+        $(document).ready(function () {
+
+        });
+
+
+
+        function AddContentRow() {
+            var type = $("#ItmOrServ").val();
+            if (type == "item") {
+                var rowno = parseInt($("#contentrowno").val());
+                var tr = "<tr id='contentrowno_" + rowno + "' ><td>" + rowno + "</td>" +
+                    "<td><div class='input-group input-group'> <span class='input-group-text'><i class='ri-file-list-fill'></i></span> <input type='text' class='form-control' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
+                    "<td> <input disabled class='form-control description'/> </td> <td> <input type='number'  class='form-control quantity'/> </td><td> <input type='number'  class='form-control unitprice'/> </td><td> <input type='number'  class='form-control taxcode'/> </td> <td>  <input type='number'  class='form-control discount'/></td><td> <input type='number'  class='form-control total'/></td><td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
+                $("#tablegridtbody").append(tr);
+                rowno = rowno + 1;
+                $("#contentrowno").val(rowno)
+            }
+            else{
+                var rowno = parseInt($("#contentrowno1").val());
+                var tr = "<tr id='contentrowno1_" + rowno + "' ><td>" + rowno + "</td> <td><input class='form-control description type='text'/></td>" +
+                    "<td><div class='input-group input-group'> <span class='input-group-text'><i class='ri-file-list-fill'></i></span> <input type='text' class='form-control' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
+                    "<td> <input disabled class='form-control description'/> </td> <td> <input type='text'  class='form-control taxcode'/> </td></td><td> <input type='number'  class='form-control total'/></td><td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
+                $("#tablegridtbody1").append(tr);
+                rowno = rowno + 1;
+                $("#contentrowno1").val(rowno)
+            }
+        }
+        function DeleteRow(rowno) {
+          var type=  $("#ItmOrServ").val();
+            if (type == "item") {
+                $("#contentrowno_" + rowno).remove();
+            }
+            else {
+                $("#contentrowno1_" + rowno).remove();
+            }
+           
+        }
+
+        $("#ItmOrServ").change(function () {
+            var type = $(this).val();
+            if (type == "item") {
+                $("#Itemtype").removeClass("hide");
+                $("#Servicetype").addClass("hide");
+            }
+            else{
+                $("#Servicetype").removeClass("hide");
+                $("#Itemtype").addClass("hide");
+            }
+        });
+
+    </script>
+}
