@@ -37,8 +37,8 @@
 
                                     <th>Sr #</th>
                                     <th>User Id</th>
-                                    <th>Picture</th>
-                                    <th>User Name</th>
+                                     <th>Picture</th>
+                                     <th>User Name</th>
                                     <th>Date of Birth</th>
                                     <th>CNIC</th>
                                     <th>Email</th>
@@ -72,8 +72,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="javascript:void(0);">
+@*                 <form id="b1user" action="javascript:void(0);">
+                *@              
+                <form id="b1user" class="custom-validation" action="#" role="form">
                     <div class="row g-3">
+
+                        <div class="col-lg-6">
+                            
+                        </div><!--end col-->
+                        <div class="col-lg-6" style="text-align:right;">
+                            <p><img id="PreviewUrl" width="150px, height:100px" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThtjU0d_BQklzBkT7Hn7t48a5yaBVWIJa4i6PcFbFgt91JYcN-FPV0laysIBBD-VC-p-s&usqp=CAU" /></p>
+                            <input type="file" id="fileUpload" class="fileUpload" onchange="UploadImageOnServer()" style="width: 140px; margin-left:60%; font-size:10px">
+                            <input type="text" id="ImageURL" class="hide" />
+
+                        </div>
                         <div class="col-lg-6">
                             <div>
                                 <label for="firstName" class="form-label">First Name</label>
@@ -94,14 +106,20 @@
                         </div><!--end col-->
                         <div class="col-lg-6">
                             <div>
+                                <label for="emailInput" class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" id="dob" placeholder="">
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-lg-6">
+                            <div>
                                 <label for="passwordInput" class="form-label">Phone #</label>
-                                <input type="text" class="form-control" id="fatherName" placeholder="Enter Phone">
+                                <input type="number" class="form-control" id="phoneno" placeholder="Enter Phone">
                             </div>
                         </div><!--end col--> 
                         <div class="col-lg-6">
                             <div>
                                 <label for="passwordInput" class="form-label">CNIC</label>
-                                <input type="text" class="form-control" id="CNIC" placeholder="CNIC">
+                                <input type="number" class="form-control" id="CNIC" placeholder="CNIC">
                             </div>
                         </div><!--end col-->
                         <div class="col-lg-6">
@@ -110,25 +128,38 @@
                                 <input type="email" class="form-control" id="emailInput" placeholder="Enter Email">
                             </div>
                         </div><!--end col-->
-                        <div class="col-lg-6">
+@*                         <div class="col-lg-6">
                             <div>
                                 <label for="passwordInput" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="passwordInput" value="451326546">
                             </div>
-                        </div><!--end col-->
+
+                        </div><!--end col--> *@
                         <div class="col-lg-6">
-                            <label for="genderInput" class="form-label">Gender</label>
+                            <div>
+                                <label for="passwordInput" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="passwordInput" value="451326546">
+                                    
+                                    <button class="btn btn-sm btn-primary" type="button" id="togglePassword"><i id="changePasswordIcon" class="ri-eye-off-fill"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-6">
+                            <label for="genderInput" id="gender" class="form-label">Gender</label>
                             <div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Male">
                                     <label class="form-check-label" for="inlineRadio1">Male</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Female">
                                     <label class="form-check-label" for="inlineRadio2">Female</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="Others">
                                     <label class="form-check-label" for="inlineRadio3">Others</label>
                                 </div>
                             </div>
@@ -140,25 +171,29 @@
                            
                             </div>
                         </div><!--end col-->
-                      
+                       
                         <div class="col-lg-12">
                             <div class="hstack gap-2 justify-content-end">
                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
                             </div>
-                        </div><!--end col-->
-                    </div><!--end row-->
-                </form>
+                        </div><!--end col--> 
+                     </div><!--end row-->
+                 </form>
+
             </div>
         </div>
     </div>
 </div>
 
 
+<input id="ID" class="hide" type="number" />
+<input id="DeleteID" class="hide" type="number" />
 
 @section Script {
     <!--datatable js-->
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script src="~/cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="~/cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
@@ -166,19 +201,213 @@
     <script src="~/cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
     <script src="~/cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
     <script src="~/cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-    @*     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
- *@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 
-    <script>
 
+ 
+    <script type="text/javascript">
+
+ 
         $(document).ready(function () {
+            $("#b1user").validate({
+                errorElement: 'div', //default input error message container
+                errorClass: 'vd_red', // default input error message class
+                focusInvalid: false, // do not focus the last invalid input
+                ignore: "",
+                rules: {
+                    // username: {
+                    //     minlength: 5,
+                    //     maxlength: 50,
+                    //     required: true
+                    // },
+                    // employeename: {
+                    //     required: true
+                    // },
+                    // employeecode: {
+                    //     required: true
+                    // },
+                    // cnic: {
+                    //     required: true
+
+                    // },
+
+                    // designation: {
+                    //     required: true
+                    // },
+
+                    // fathername: {
+                    //     required: true
+                    // },
+                    // Department: {
+                    //     required: true
+                    // },
+
+                    // Status: {
+                    //     required: true
+                    // }
+
+                },
+
+                errorPlacement: function (error, element) {
+                    debugger;
+                    if (element.parent().hasClass("vd_checkbox") || element.parent().hasClass("vd_radio")) {
+                        element.parent().append(error);
+                    } else if (element.parent().hasClass("vd_input-wrapper")) {
+                        error.insertAfter(element.parent());
+                    } else if (element.hasClass("js-example-basic-single")) {
+                        error.insertAfter(element.parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+
+                invalidHandler: function (event, validator) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'error',
+                        text: 'Enter Valid Form Data',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+
+
+                },
+
+                highlight: function (element) { // hightlight error inputs
+
+                    $(element).addClass('vd_bd-red');
+                    $(element).siblings('.help-inline').removeClass('help-inline fa fa-check vd_green mgl-10');
+
+                },
+
+                unhighlight: function (element) { // revert the change dony by hightlight
+                    $(element)
+                        .closest('.control-group').removeClass('error'); // set error class to the control group
+                },
+
+                success: function (label, element) {
+                    $(element).removeClass('vd_bd-red');
+                },
+
+                submitHandler: function (form) {
+                    SubmitRequest();
+                }
+
+            });
+
             GetUserList();
         });
+
+        $("#changePasswordIcon").click(function () {
+            debugger;
+            if ($("#passwordInput").attr("type") == "text") {
+                $("#passwordInput").attr("type", "password");
+                $("#changePasswordIcon").addClass("ri-eye-off-fill");
+                $("#changePasswordIcon").removeClass("ri-eye-fill");
+            }
+            else {
+                $("#passwordInput").attr("type", "text");
+                $("#changePasswordIcon").removeClass("ri-eye-off-fill");
+                $("#changePasswordIcon").addClass("ri-eye-fill");
+            }
+
+        });
+
+        function DeleteUser(id) {
+
+            var url = "/api/PortalUsers/DeleteUser?id=" + id + "";
+            debugger;
+            $.ajax({
+                type: 'Delete',
+                url: url,
+                dataType: "json",
+                data: { Id: id },
+                async: false,
+                contentType: 'application/json',
+                success: function (response) {
+                    $("#b1user").submit(function (e) {
+                        e.preventDefault();
+                    });
+
+                    if (response.code === 100) {
+                        alert('User added successfully');
+                        GetUserList();
+
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+
+        function SubmitRequest() {
+
+            debugger;
+            let admin = $("#IsAdmin").prop('checked') ? true : false;
+            var selectedValue = $('input[name="inlineRadioOptions"]:checked').val();
+
+            var methodType = 'POST';
+            var url = '/api/PortalUsers/AddUser';
+
+            var user = new Object();
+
+            if ($("#ID").val() != "") {
+                debugger;
+                user.id = parseInt($("#ID").val());
+                methodType = 'POST';
+                url = '/api/PortalUsers/UpdateUser';
+            }
+
+            user.Image = $("#ImageURL").val();
+            user.UserName = $("#UserName").val();
+            user.FirstName = $("#firstName").val();
+            user.LastName = $("#lastName").val();
+            user.CNIC = $("#CNIC").val();
+            user.Phone = $("#phoneno").val();
+            user.Email = $("#emailInput").val();
+            user.Password = $("#passwordInput").val();
+            user.DOB = $("#dob").val();
+            user.IsAdmin = admin;
+            user.Gender = selectedValue;
+
+
+            var ModelData = JSON.stringify(user);
+            $.ajax({
+                type: methodType,
+                url: url,
+                contentType: 'application/json; charset=utf-8',
+                processData: false,
+                dataType: "json",
+                async: false,
+                data: ModelData,
+                success: function (response) {
+                    debugger;
+                    console.log(response);
+
+                    if (response.code === 100) {
+                        $("#b1user").submit(function (e) {
+                            e.preventDefault();
+                        });
+                        $("#AddUserModal").modal("hide");
+                        alert(response.message);
+                        location.reload(true);
+                    } else {
+                        $("#b1user").submit(function (e) {
+                            e.preventDefault();
+                        });
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+
         function GetUserList() {
             var url = "/api/PortalUsers/GetAll";
-            debugger;
 
             $.ajax({
                 type: 'GET',
@@ -193,33 +422,31 @@
                         var datatabl = $('#fixed-header').DataTable();
                         datatabl.destroy();
                         $("#fixed-headertbody").empty();
+                        debugger;
                         if (relist != null && relist.length > 0) {
                             var sr = 1;
                             for (let list of relist) {
                                 var row = '<tr>' +
                                     '<td>' + sr + '</td>' +
                                     '<td>' + list.id + '</td>' +
-                                    '<td></td>' +
+                                    '<td><img class="PreviewUrl" src="' + list.image + '" style="width:70px;height:40px"/></td>' +
                                     '<td>' + list.userName + '</td>' +
                                     '<td>' + DateFormat(list.dob) + '</td>' +
                                     '<td>' + list.cnic + '</td>' +
                                     '<td>' + list.email + '</td>' +
                                     '<td>' + list.phone + '</td>' +
                                     '<td>' + DateFormat(list.createdOn) + '</td>' +
-                                    '<td> <a onclick="ViewUser(' + list.id + ')" class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2" "></i></a><a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a><a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a></td>' +
+                                    '<td><a onclick="EditUser(' + list.id + ')" class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a><a onclick="DeleteUser(' + list.id + ')" class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a></td>' +
                                     '</tr>';
                                 $("#fixed-headertbody").append(row);
                                 sr++;
-
                             }
-
                             $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"] });
                         }
                     }
                 }
             });
         }
-
 
         function DateFormat(datedata){
             var dateString = datedata;
@@ -237,7 +464,7 @@
             return formattedDate;
         }
 
-        function ViewUser(id) {
+        function EditUser(id) {
             var url = "/api/PortalUsers/Get?id=" + id + "";
 
             $.ajax({
@@ -252,34 +479,62 @@
                     if (response.code === 100) {
 
                         var data = response.data;
-                        let status = data.isActive == true ? "1" : "0";
-
-                        $("#myModal").modal("show");
+                        let admin = data.isAdmin == true ? "1" : "0";
+                        let responseValue = data.gender; // Example value
+                        let date = data.dob; // Example value
+                        let newdate = DateFormat(date);
+                        $('input[name="inlineRadioOptions"][value="' + responseValue + '"]').prop('checked', true);
+                        let Image = data.image == "" ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThtjU0d_BQklzBkT7Hn7t48a5yaBVWIJa4i6PcFbFgt91JYcN-FPV0laysIBBD-VC-p-s&usqp=CAU" : data.image;
+                        $("#AddUserModal").modal("show");
 
                         $("#ID").val(data.id);
-                        $("#username").val(data.username);
-                        $("#designation").val(data.desiG_DESC);
-                        $("#Department").val(data.departmenT_DESC);
-                        $("#Department").trigger('change');
-                        $("#fathername").val(data.emP_FATHER_NAM);
-                        $("#employeecode").val(data.emP_CODE);
-                        $("#employeename").val(data.emP_FULL_NAME);
-                        $("#cnic").val(data.niC_NO);
-                        $("#Status").val(status);
-                        $("#SubmitButton").text("Update");
-                        $("#myModalLabel").text("Edit User");
+                        $("#ImageURL").val(Image);
+                        $("#PreviewUrl").attr("src", Image);
+                        $("#UserName").val(data.userName);
+                        $("#dob").val(newdate);
+                        $("#firstName").val(data.firstName);
+                        $("#lastName").val(data.lastName);
+                        $("#CNIC").val(data.cnic);
+                        $("#phoneno").val(data.phone);
+                        $("#emailInput").val(data.email);
+                        $("#passwordInput").val(data.password);
+                        $("#IsAdmin").val(admin);
+                        $("#submit").text("Update");
+                        $("#AddUserModalLabel").text("Update User Details");
                     }
                     else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Problem Finding User',
-                            allowOutsideClick: false,
-                            allowEscapeKey: false
-                        });
+                        alert(response.message);
                     }
                 }
             });
+        }
+
+        function UploadImageOnServer() 
+        {
+            var extension = $('input[type=file]').val().split('.').pop().toLowerCase();
+
+            if ($.inArray(extension, ['png', 'jpg', 'jpeg']) == -1) {
+                ResponseMessageModal("error", "Sorry, invalid extension.");
+                $('input[type=file]').val();
+                $("#PreviewUrl").attr("src", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThtjU0d_BQklzBkT7Hn7t48a5yaBVWIJa4i6PcFbFgt91JYcN-FPV0laysIBBD-VC-p-s&usqp=CAU");
+                return false;
+            }
+            else 
+            {
+                var file = $("input[type=file]").get(0).files[0];
+                if (file) {
+                    var reader = new FileReader();
+
+                    reader.onload = function () {
+                        $("#PreviewUrl").attr("src", reader.result);
+                        $("#PreviewUrl").attr("href", reader.result);
+                        $("#PreviewUrl").attr("target", "_blank");
+                        $("#ImageURL").val(reader.result);
+                    }
+
+                    reader.readAsDataURL(file);
+                }
+            }
         }
     </script>
 }

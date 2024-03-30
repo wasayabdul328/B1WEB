@@ -95,12 +95,32 @@ namespace B1WEB.Controllers.Api
                         Message = "Email Already Exsist"
                     });
                 }
+               var checkuserName= _context.PortalUsers.Where(x=>x.UserName== model.UserName).FirstOrDefault();
+                if (checkuserName != null)
+                {
+
+                    return Ok(new ApiResponse<object>
+                    {
+                        Code = ResponseCode.Conflict,
+                        Message = "Username Already Exsist"
+                    });
+                }
+               var checkusercnic= _context.PortalUsers.Where(x=>x.CNIC== model.CNIC).FirstOrDefault();
+                if (checkusercnic != null)
+                {
+
+                    return Ok(new ApiResponse<object>
+                    {
+                        Code = ResponseCode.Conflict,
+                        Message = "CNIC Already Exsist"
+                    });
+                }
 
                 model.CreatedOn = DateTime.Now;
                 model.UpdatedOn = DateTime.Now;
                 model.IsActive = model.IsActive;
-                model.CreatedBy = model.CreatedBy;
-                model.UpdatedBy = model.UpdatedBy;
+                model.CreatedBy = 1;
+                model.UpdatedBy = 1;
                 model.IsActive = true;
 
                 _context.PortalUsers.Add(model);
@@ -109,7 +129,7 @@ namespace B1WEB.Controllers.Api
                 return Ok(new ApiResponse<object>
                 {
                     Code = ResponseCode.Success,
-                    Message = "Success",
+                    Message = "User added Successfully",
                     Data = null
                 });
             }
@@ -119,7 +139,7 @@ namespace B1WEB.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("UpdateUser")]
         public IActionResult UpdateUser([FromBody] PortalUsers model)
         {
@@ -140,14 +160,27 @@ namespace B1WEB.Controllers.Api
                 {
 
                     data.UpdatedOn = DateTime.Now;
-                    data.UpdatedBy = model.UpdatedBy;
+                    data.UpdatedBy = 1;
+                    data.UserName = model.UserName;
+                    data.FirstName = model.FirstName;
+                    data.LastName = model.LastName;
+                    data.Image = model.Image;
+                    data.DOB = model.DOB;
+                    data.Phone = model.Phone;
+                    data.CNIC = model.CNIC;
+                    data.Email = model.Email;
+                    data.Password = model.Password;
+                    data.Gender = model.Gender;
+                    data.IsAdmin = model.IsAdmin;
+                    data.IsActive = true;
 
+                    _context.Update(data);
                     _context.SaveChanges();
 
                     return Ok(new ApiResponse<object>
                     {
                         Code = ResponseCode.Success,
-                        Message = "Success",
+                        Message = "User Updated Successfully",
                         Data = model
                     });
                 }
