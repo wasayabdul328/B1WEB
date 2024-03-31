@@ -24,7 +24,7 @@
                             <div class="flex-shrink-0">
                                 <div class="d-flex gap-2 flex-wrap">
                                     @*    <button class="btn btn-primary" id="remove-actions" onclick="deleteMultiple()" style="display: none;"><i class="ri-delete-bin-2-line"></i></button> *@
-                                    <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#AddUserModal"><i class="ri-add-line align-bottom me-1"></i> Create A User</a>
+                                    <a class="btn btn-danger" onclick="openmodalAdd()" data-bs-toggle="modal" data-bs-target="#AddUserModal"><i class="ri-add-line align-bottom me-1"></i> Create A User</a>
                                 </div>
                             </div>
                         </div>
@@ -37,8 +37,8 @@
 
                                     <th>Sr #</th>
                                     <th>User Id</th>
-                                     <th>Picture</th>
-                                     <th>User Name</th>
+                                    <th>Picture</th>
+                                    <th>User Name</th>
                                     <th>Date of Birth</th>
                                     <th>CNIC</th>
                                     <th>Email</th>
@@ -89,19 +89,19 @@
                         <div class="col-lg-6">
                             <div>
                                 <label for="firstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="firstName" placeholder="Enter firstname">
+                                <input type="text" class="form-control" id="firstName" placeholder="Enter FirstName">
                             </div>
                         </div><!--end col-->
                         <div class="col-lg-6">
                             <div>
                                 <label for="lastName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" placeholder="Enter lastname">
+                                <input type="text" class="form-control" id="lastName" placeholder="Enter LastName">
                             </div>
                         </div><!--end col-->
                         <div class="col-lg-6">
                             <div>
                                 <label for="emailInput" class="form-label">UserName</label>
-                                <input type="text" class="form-control" id="UserName" placeholder="Enter User Name">
+                                <input type="text" class="form-control" id="UserName" placeholder="Enter UserName">
                             </div>
                         </div><!--end col-->
                         <div class="col-lg-6">
@@ -113,13 +113,13 @@
                         <div class="col-lg-6">
                             <div>
                                 <label for="passwordInput" class="form-label">Phone #</label>
-                                <input type="number" class="form-control" id="phoneno" placeholder="Enter Phone">
+                                <input type="number" class="form-control" id="phoneno" placeholder="Enter Phone No.">
                             </div>
                         </div><!--end col--> 
                         <div class="col-lg-6">
                             <div>
                                 <label for="passwordInput" class="form-label">CNIC</label>
-                                <input type="number" class="form-control" id="CNIC" placeholder="CNIC">
+                                <input type="number" class="form-control" id="CNIC" placeholder="Enter CNIC">
                             </div>
                         </div><!--end col-->
                         <div class="col-lg-6">
@@ -132,9 +132,9 @@
                             <div>
                                 <label for="passwordInput" class="form-label">Password</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="passwordInput" value="451326546">
+                                    <input type="password" class="form-control" id="passwordInput" value="">
                                     
-                                    <button class="btn btn-sm btn-primary" type="button" id="togglePassword"><i id="changePasswordIcon" class="ri-eye-off-fill"></i></button>
+                                    <button class="btn btn-sm btn-primary" type="button" id="togglePassword"><i id="changePasswordIcon" class="ri-eye-fill"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                         <div class="col-lg-6">
                             <label class="form-check-label" for="IsAdmin">IsAdmin</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="IsAdmin" checked="">
+                                <input class="form-check-input" type="checkbox" id="IsAdmin">
                            
                             </div>
                         </div><!--end col-->
@@ -210,13 +210,13 @@
             debugger;
             if ($("#passwordInput").attr("type") == "text") {
                 $("#passwordInput").attr("type", "password");
-                $("#changePasswordIcon").addClass("ri-eye-off-fill");
-                $("#changePasswordIcon").removeClass("ri-eye-fill");
+                $("#changePasswordIcon").removeClass("ri-eye-off-fill");
+                $("#changePasswordIcon").addClass("ri-eye-fill");
             }
             else {
                 $("#passwordInput").attr("type", "text");
-                $("#changePasswordIcon").removeClass("ri-eye-off-fill");
-                $("#changePasswordIcon").addClass("ri-eye-fill");
+                $("#changePasswordIcon").addClass("ri-eye-off-fill");
+                $("#changePasswordIcon").removeClass("ri-eye-fill");
             }
 
         });
@@ -352,11 +352,7 @@
 
         function DateFormat(datedata){
             var dateString = datedata;
-
-            // Create a new Date object from the input string
             var date = new Date(dateString);
-
-            // Extract the date components
             var year = date.getFullYear();
             var month = ('0' + (date.getMonth() + 1)).slice(-2); // Adding 1 because getMonth() returns zero-based index
             var day = ('0' + date.getDate()).slice(-2);
@@ -381,9 +377,9 @@
                     if (response.code === 100) {
 
                         var data = response.data;
-                        let admin = data.isAdmin == true ? "1" : "0";
-                        let responseValue = data.gender; // Example value
-                        let date = data.dob; // Example value
+                        let admin = data.isAdmin;
+                        let responseValue = data.gender;
+                        let date = data.dob; 
                         let newdate = DateFormat(date);
                         $('input[name="inlineRadioOptions"][value="' + responseValue + '"]').prop('checked', true);
                         let Image = data.image == "" ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThtjU0d_BQklzBkT7Hn7t48a5yaBVWIJa4i6PcFbFgt91JYcN-FPV0laysIBBD-VC-p-s&usqp=CAU" : data.image;
@@ -400,7 +396,7 @@
                         $("#phoneno").val(data.phone);
                         $("#emailInput").val(data.email);
                         $("#passwordInput").val(data.password);
-                        $("#IsAdmin").val(admin);
+                        $('#IsAdmin').prop('checked', admin == 1);
                         $("#submit").text("Update");
                         $("#AddUserModalLabel").text("User Details");
                     }
@@ -438,5 +434,25 @@
                 }
             }
         }
+
+        function openmodalAdd() {
+            debugger;
+            $("#ID").val("");
+            $("#ImageURL").val("");
+            $("#PreviewUrl").attr("src", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThtjU0d_BQklzBkT7Hn7t48a5yaBVWIJa4i6PcFbFgt91JYcN-FPV0laysIBBD-VC-p-s&usqp=CAU");
+            $("#UserName").val("");
+            $("#firstName").val("");
+            $("#lastName").val("");
+            $("#CNIC").val("");
+            $("#phoneno").val("");
+            $("#emailInput").val("");
+            $("#passwordInput").val("");
+            $("#dob").val("");
+            $('#IsAdmin').prop('checked', false);
+            $('input[name="inlineRadioOptions"]').prop('checked', false);
+            $("#submit").text("Submit");
+            $("#AddUserModalLabel").text("Create A User");
+        }
+
     </script>
 }
