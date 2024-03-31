@@ -12,6 +12,7 @@
     <link href="~/assets/libs/swiper/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
     <script src="~/assets/js/layout.js"></script>
     <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
@@ -151,7 +152,7 @@
                         <div class="dropdown ms-sm-3 header-item topbar-user">
                             <button type="button" class="btn material-shadow-none" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
-                                    <img class="rounded-circle header-profile-user" src="~/assets/images/users/avatar-1.jpg" alt="Header Avatar">
+                                    <img class="rounded-circle header-profile-user" onerror="this.src ='~/assets/images/users/avatar-10.jpg'" " src="@Context.Session.GetString("image")" alt="Header Avatar">
                                     <span class="text-start ms-xl-2">
                                         <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">@Context.Session.GetString("UserName")</span>
                                        @*  <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">Role</span> *@
@@ -360,6 +361,7 @@
     <script src="~/assets/libs/jsvectormap/maps/world-merc.js"></script>
     <script src="~/assets/libs/swiper/swiper-bundle.min.js"></script>
     <script src="~/assets/js/pages/dashboard-ecommerce.init.js"></script>
+    <script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script>
     <script src="~/assets/js/app.js"></script>
    @await RenderSectionAsync("Script", required: false)
 </body>

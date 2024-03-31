@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
 
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <style>
+        .swal2-cancel{
+            display:none !important;
+        }
+    </style>
 }
 
 
@@ -220,8 +225,25 @@
             }
 
         });
-
         function DeleteUser(id) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: !0,
+                customClass: {
+                    confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                    cancelButton: "btn btn-danger w-xs mt-2"
+                },
+                confirmButtonText: "Yes, delete it!",
+                buttonsStyling: !1,
+                showCloseButton: !0
+            }).then(function (t) {
+                confirmDelete(id)
+            })
+        }
+
+        function confirmDelete(id) {
 
             var url = "/api/PortalUsers/DeleteUser?id=" + id + "";
             debugger;
@@ -238,8 +260,21 @@
                     });
 
                     if (response.code === 100) {
-                        alert('User added successfully');
-                        GetUserList();
+                        Swal.fire({
+                            title: "Success",
+                            text: "User Removed Successfully",
+                            icon: "success",
+                            showCancelButton: !0,
+                            customClass: {
+                                confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                                cancelButton: "btn btn-danger w-xs mt-2"
+                            },
+                            confirmButtonText: "Okay",
+                            buttonsStyling: !1,
+                            showCloseButton: !0
+                        }).then(function (t) {
+                            location.reload(true);
+                        })
 
                     } else {
                         alert(response.message);
@@ -297,8 +332,21 @@
                             e.preventDefault();
                         });
                         $("#AddUserModal").modal("hide");
-                        alert(response.message);
-                        location.reload(true);
+                        Swal.fire({
+                            title: "Congratlations",
+                            text: "UserCreated Successfully",
+                            icon: "success",
+                            showCancelButton: !0,
+                            customClass: {
+                                confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                                cancelButton: "btn btn-danger w-xs mt-2"
+                            },
+                            confirmButtonText: "Okay",
+                            buttonsStyling: !1,
+                            showCloseButton: !0
+                        }).then(function (t) {
+                            location.reload(true);
+                        })
                     } else {
                         $("#b1user").submit(function (e) {
                             e.preventDefault();
