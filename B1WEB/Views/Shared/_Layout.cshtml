@@ -8,6 +8,7 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <link rel="shortcut icon" href="~/assets/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="~/assets/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/libs/swiper/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
     <script src="~/assets/js/layout.js"></script>
@@ -155,7 +156,7 @@
                                     <img class="rounded-circle header-profile-user" onerror="this.src ='~/assets/images/users/avatar-10.jpg'" " src="@Context.Session.GetString("image")" alt="Header Avatar">
                                     <span class="text-start ms-xl-2">
                                         <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">@Context.Session.GetString("UserName")</span>
-                                       @*  <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">Role</span> *@
+                                        <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">@Context.Session.GetString("CompanyName")</span>
                                     </span>
                                 </span>
                             </button>
@@ -170,7 +171,7 @@
                                 <a class="dropdown-item" href="pages-profile.html"><i class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Balance : <b>$5971.67</b></span></a>
                                 <a class="dropdown-item" href="pages-profile-settings.html"><span class="badge bg-success-subtle text-success mt-1 float-end">New</span><i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Settings</span></a>
                                 <a class="dropdown-item" href="auth-lockscreen-basic.html"><i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Lock screen</span></a> *@
-                                <a class="dropdown-item" href="auth-logout-basic.html"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Logout</span></a>
+                                <a class="dropdown-item" href="/Account/SignOut"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Logout</span></a>
                             </div>
                         </div>
                     </div>
@@ -262,6 +263,9 @@
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
                                         <a href="/Administrator/manageUser" class="nav-link">Manage Users</a>
+                                    </li>   
+                                    <li class="nav-item">
+                                        <a href="/Administrator/CompanyConfiguration" class="nav-link">Manage Company Configuration</a>
                                     </li>
 
                                 </ul>
@@ -362,6 +366,7 @@
     <script src="~/assets/libs/swiper/swiper-bundle.min.js"></script>
     <script src="~/assets/js/pages/dashboard-ecommerce.init.js"></script>
     <script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="~/assets/js/app.js"></script>
    @await RenderSectionAsync("Script", required: false)
 </body>

@@ -1,0 +1,417 @@
+﻿@{
+    ViewData["Title"] = "Sales Order List";
+}
+
+@section CSS {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <style>
+        .swal2-cancel {
+            display: none !important;
+        }
+    </style>
+}
+
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <h5 style="font-size:32px" class="card-title mb-0 flex-grow-1">Company Configuration List</h5>
+                            <div class="flex-shrink-0">
+                                <div class="d-flex gap-2 flex-wrap">
+                                    @*    <button class="btn btn-primary" id="remove-actions" onclick="deleteMultiple()" style="display: none;"><i class="ri-delete-bin-2-line"></i></button> *@
+                                    <a class="btn btn-danger" onclick="openmodalAdd()" data-bs-toggle="modal" data-bs-target="#AddUserModal"><i class="ri-add-line align-bottom me-1"></i> Create Company Configration</a>
+                                </div>
+                            </div>
+                        </div>
+                        @*   <h5 class="card-title mb-0">  Sales Order List <a style="float:right" href="/Sales/AddSaleOrder" class="btn btn-primary btn-sm"> <i class="ri-file-add-line"></i> Add Sale Order</a></h5> *@
+                    </div>
+                    <div class="card-body">
+                        <table id="fixed-header" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                            <thead class="tablegrid">
+                                <tr>
+
+                                    <th>Sr #</th>
+                                    <th>ID</th>
+                                    <th>Database Name</th>
+                                    <th>Company Logo</th>
+                                    <th>Servic eLayer URL</th>
+                                    <th>Service Layer Username</th>
+                                    <th>Service Layer Password</th>
+                                    <th>Action</th>
+                                
+                                </tr>
+                            </thead>
+                            <tbody id="fixed-headertbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!--end row-->
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Grids in modals -->
+
+<div class="modal fade" id="AddUserModal" tabindex="-1" aria-labelledby="AddUserModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddUserModalLabel">Create Company Configuration</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @*                 <form id="b1user" action="javascript:void(0);">
+                *@
+                <form id="b1user" class="custom-validation" action="#" role="form">
+                    <div class="row g-3">
+
+                        <div class="col-lg-6">
+                        </div><!--end col-->
+                        <div class="col-lg-6" style="text-align:right;">
+                            <p><img id="PreviewUrl" width="150px, height:100px" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThtjU0d_BQklzBkT7Hn7t48a5yaBVWIJa4i6PcFbFgt91JYcN-FPV0laysIBBD-VC-p-s&usqp=CAU" /></p>
+                            <input type="file" id="fileUpload" class="fileUpload" onchange="UploadImageOnServer()" style="width: 140px; margin-left:60%; font-size:10px">
+                            <input type="text" id="ImageURL" class="hide" />
+
+                        </div>
+                        <div class="col-lg-6">
+                            <div>
+                                <label for="DatabaseName" class="form-label">Database Name</label>
+                                <input type="text" class="form-control" id="DatabaseName" placeholder="Enter Database Name">
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-lg-6">
+                            <div>
+                                <label for="ServiceLayerURL" class="form-label">Service Layer URL</label>
+                                <input type="text" class="form-control" id="ServiceLayerURL" placeholder="Enter Service Layer URL">
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-lg-6">
+                            <div>
+                                <label for="ServiceLayerUsername" class="form-label">Service Layer User Name</label>
+                                <input type="text" class="form-control" id="ServiceLayerUsername" placeholder="Enter Service Layer UserName">
+                            </div>
+                        </div><!--end col-->
+
+                     
+                        <div class="col-lg-6">
+                            <div>
+                                <label for="ServiceLayerPassword" class="form-label">Service Layer Password</label>
+                                <input type="text" class="form-control" id="ServiceLayerPassword" placeholder="Enter Service Layer Password">
+                            </div>
+                        </div><!--end col-->
+
+                        <div class="col-lg-12">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <a onclick="SubmitRequest()" class="btn btn-primary" id="submit">Submit</a>
+                            </div>
+                        </div><!--end col-->
+                    </div><!--end row-->
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<input id="ID" class="hide" type="number" />
+<input id="DeleteID" class="hide" type="number" />
+
+@section Script {
+    <!--datatable js-->
+
+
+    <script src="~/cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="~/cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+
+
+            GetUserList();
+        });
+
+        function DeleteUser(id) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: !0,
+                customClass: {
+                    confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                    cancelButton: "btn btn-danger w-xs mt-2"
+                },
+                confirmButtonText: "Yes, delete it!",
+                buttonsStyling: !1,
+                showCloseButton: !0
+            }).then(function (t) {
+                confirmDelete(id)
+            })
+        }
+
+        function confirmDelete(id) {
+
+            var url = "/api/CompanyConfigration/DeleteCompanyConfigration?id=" + id + "";
+            debugger;
+            $.ajax({
+                type: 'Delete',
+                url: url,
+                dataType: "json",
+                data: { Id: id },
+                async: false,
+                contentType: 'application/json',
+                success: function (response) {
+                    $("#b1user").submit(function (e) {
+                        e.preventDefault();
+                    });
+
+                    if (response.code === 100) {
+                        Swal.fire({
+                            title: "Success",
+                            text: "Company Removed Successfully",
+                            icon: "success",
+                            showCancelButton: !0,
+                            customClass: {
+                                confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                                cancelButton: "btn btn-danger w-xs mt-2"
+                            },
+                            confirmButtonText: "Okay",
+                            buttonsStyling: !1,
+                            showCloseButton: !0
+                        }).then(function (t) {
+                            location.reload(true);
+                        })
+
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+
+        function SubmitRequest() {
+
+      
+            var methodType = 'POST';
+            var url = '/api/CompanyConfigration/AddCompanyConfigration';
+
+            var user = new Object();
+
+            if ($("#ID").val() != "") {
+                debugger;
+                user.id = parseInt($("#ID").val());
+                methodType = 'POST';
+                url = '/api/CompanyConfigration/UpdateCompanyConfigration';
+            }
+
+            user.CompanyLogo = $("#ImageURL").val();
+            debugger;
+            user.DatabaseName = $("#DatabaseName").val();
+            user.ServiceLayerURL = $("#ServiceLayerURL").val();
+            user.ServiceLayerUsername = $("#ServiceLayerUsername").val();
+            user.ServiceLayerPassword = $("#ServiceLayerPassword").val();
+            user.IsActive = true;
+
+
+
+            var ModelData = JSON.stringify(user);
+            $.ajax({
+                type: methodType,
+                url: url,
+                contentType: 'application/json; charset=utf-8',
+                processData: false,
+                dataType: "json",
+                async: false,
+                data: ModelData,
+                success: function (response) {
+                    debugger;
+                    console.log(response);
+
+                    if (response.code === 100) {
+                        $("#b1user").submit(function (e) {
+                            e.preventDefault();
+                        });
+                        $("#AddUserModal").modal("hide"); 
+                        Swal.fire({
+                            title: "Congratlations",
+                            text: "Company Configuration Added Successfully",
+                            icon: "success",
+                            showCancelButton: !0,
+                            customClass: {
+                                confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                                cancelButton: "btn btn-danger w-xs mt-2"
+                            },
+                            confirmButtonText: "Okay",
+                            buttonsStyling: !1,
+                            showCloseButton: !0
+                        }).then(function (t) {
+                            location.reload(true);
+                        })
+                    } else {
+                        $("#b1user").submit(function (e) {
+                            e.preventDefault();
+                        });
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+
+        function GetUserList() {
+            var url = "/api/CompanyConfigration/GetAll";
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: "json",
+                contentType: 'application/json',
+                success: function (response) {
+
+                    if (response.code == 100) {
+
+                        var relist = response.data;
+
+                        $("#fixed-headertbody").empty();
+                        debugger;
+                        if (relist != null && relist.length > 0) {
+                            var sr = 1;
+                            for (let list of relist) {
+                                var row = '<tr>' +
+                                    '<td>' + sr + '</td>' +
+                                    '<td>' + list.id + '</td>' +
+                                    '<td>' + list.databaseName + '</td>' +
+                                    '<td><img class="PreviewUrl" src="' + list.companyLogo + '" style="width:70px;height:40px"/></td>' +
+                                    '<td>' + list.serviceLayerURL + '</td>' +
+                                    '<td>' + list.serviceLayerUsername + '</td>' +
+                                    '<td>' + list.serviceLayerPassword + '</td>' +
+                                    '<td><a onclick="EditUser(' + list.id + ')" class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a><a onclick="DeleteUser(' + list.id + ')" class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a></td>' +
+                                    '</tr>';
+                                $("#fixed-headertbody").append(row);
+                                sr++;
+                            }
+                            $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"] });
+                        }
+                    }
+                }
+            });
+        }
+
+        function DateFormat(datedata) {
+            var dateString = datedata;
+            var date = new Date(dateString);
+            var year = date.getFullYear();
+            var month = ('0' + (date.getMonth() + 1)).slice(-2); // Adding 1 because getMonth() returns zero-based index
+            var day = ('0' + date.getDate()).slice(-2);
+
+            // Construct the desired format
+            var formattedDate = year + '-' + month + '-' + day;
+            return formattedDate;
+        }
+
+        function EditUser(id) {
+            var url = "/api/CompanyConfigration/Get?id=" + id + "";
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: "json",
+                data: { id: id },
+                async: false,
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                    if (response.code === 100) {
+
+                        var data = response.data;
+                        let admin = data.isAdmin;
+                        let responseValue = data.gender;
+                        let date = data.dob;
+                        let newdate = DateFormat(date);
+                        $('input[name="inlineRadioOptions"][value="' + responseValue + '"]').prop('checked', true);
+                        let Image = data.companyLogo == "" ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThtjU0d_BQklzBkT7Hn7t48a5yaBVWIJa4i6PcFbFgt91JYcN-FPV0laysIBBD-VC-p-s&usqp=CAU" : data.companyLogo;
+                        $("#AddUserModal").modal("show");
+
+                        $("#ID").val(data.id);
+                        $("#ImageURL").val(Image);
+                        $("#PreviewUrl").attr("src", Image);
+                        $("#DatabaseName").val(data.databaseName);
+
+                        $("#ServiceLayerURL").val(data.serviceLayerURL);
+                        $("#ServiceLayerUsername").val(data.serviceLayerUsername);
+                        $("#ServiceLayerPassword").val(data.serviceLayerPassword);
+                        $("#submit").text("Update");
+                        $("#AddUserModalLabel").text("Company Configuration Details");
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+
+        function UploadImageOnServer() {
+            var extension = $('input[type=file]').val().split('.').pop().toLowerCase();
+
+            if ($.inArray(extension, ['png', 'jpg', 'jpeg']) == -1) {
+                ResponseMessageModal("error", "Sorry, invalid extension.");
+                $('input[type=file]').val();
+                $("#PreviewUrl").attr("src", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThtjU0d_BQklzBkT7Hn7t48a5yaBVWIJa4i6PcFbFgt91JYcN-FPV0laysIBBD-VC-p-s&usqp=CAU");
+                return false;
+            }
+            else {
+                var file = $("input[type=file]").get(0).files[0];
+                if (file) {
+                    var reader = new FileReader();
+
+                    reader.onload = function () {
+                        $("#PreviewUrl").attr("src", reader.result);
+                        $("#PreviewUrl").attr("href", reader.result);
+                        $("#PreviewUrl").attr("target", "_blank");
+                        $("#ImageURL").val(reader.result);
+                    }
+
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function openmodalAdd() {
+            debugger;
+            $("#ID").val("");
+            $("#ImageURL").val("");
+            $("#PreviewUrl").attr("src", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThtjU0d_BQklzBkT7Hn7t48a5yaBVWIJa4i6PcFbFgt91JYcN-FPV0laysIBBD-VC-p-s&usqp=CAU");
+            $("#DatabaseName").val("");
+
+            $("#ServiceLayerURL").val("");
+            $("#ServiceLayerUsername").val("");
+            $("#ServiceLayerPassword").val("");
+            $("#submit").text("Submit");
+            $("#AddUserModalLabel").text("Create Company Configuration");
+        }
+
+    </script>
+}

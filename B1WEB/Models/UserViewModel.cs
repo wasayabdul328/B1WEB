@@ -6,4 +6,9 @@
         public string password { get; set; }
         public string errorMessage { get; set; }
     }
+    public class CompanyViewModel
+    {
+        public string CompanyID { get; set; }
+
+    }
 }

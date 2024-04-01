@@ -70,7 +70,7 @@
 <!-- Grids in modals -->
 
 <div class="modal fade" id="AddUserModal" tabindex="-1" aria-labelledby="AddUserModalLabel" aria-modal="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="AddUserModalLabel">Create A User</h5>
@@ -83,7 +83,22 @@
                     <div class="row g-3">
 
                         <div class="col-lg-6">
-                            
+                            <div>
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="firstName" placeholder="Enter FirstName">
+                            </div>
+                            <div>
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" placeholder="Enter LastName">
+                            </div>
+                            <div>
+                                <label for="emailInput" class="form-label">UserName</label>
+                                <input type="text" class="form-control" id="UserName" placeholder="Enter UserName">
+                            </div>
+                            <div>
+                                <label for="dob" class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" id="dob" placeholder="">
+                            </div>
                         </div><!--end col-->
                         <div class="col-lg-6" style="text-align:right;">
                             <p><img id="PreviewUrl" width="150px, height:100px" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThtjU0d_BQklzBkT7Hn7t48a5yaBVWIJa4i6PcFbFgt91JYcN-FPV0laysIBBD-VC-p-s&usqp=CAU" /></p>
@@ -91,30 +106,7 @@
                             <input type="text" id="ImageURL" class="hide" />
 
                         </div>
-                        <div class="col-lg-6">
-                            <div>
-                                <label for="firstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="firstName" placeholder="Enter FirstName">
-                            </div>
-                        </div><!--end col-->
-                        <div class="col-lg-6">
-                            <div>
-                                <label for="lastName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" placeholder="Enter LastName">
-                            </div>
-                        </div><!--end col-->
-                        <div class="col-lg-6">
-                            <div>
-                                <label for="emailInput" class="form-label">UserName</label>
-                                <input type="text" class="form-control" id="UserName" placeholder="Enter UserName">
-                            </div>
-                        </div><!--end col-->
-                        <div class="col-lg-6">
-                            <div>
-                                <label for="emailInput" class="form-label">Date of Birth</label>
-                                <input type="date" class="form-control" id="dob" placeholder="">
-                            </div>
-                        </div><!--end col-->
+
                         <div class="col-lg-6">
                             <div>
                                 <label for="passwordInput" class="form-label">Phone #</label>
@@ -169,6 +161,119 @@
                            
                             </div>
                         </div><!--end col-->
+                        <div class="col-10"></div>
+                        <div class="col-2">
+                        </div>
+                        <div class="col-12">
+                            <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#CompanyTab" role="tab" aria-selected="false">
+                                        Assign Company
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#FormsTab" role="tab" aria-selected="false">
+                                        Forms Allowed
+                                    </a>
+                                </li>
+
+                            </ul>
+                            <div class="tab-content">
+
+                                <div class="tab-pane active" id="CompanyTab" role="tabpanel">
+
+                                    <table id="fixed-header" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                                        <thead class="tablegrid">
+                                            <tr>
+
+                                                <th>Sr #</th>
+                                                <th>ID</th>
+                                                <th>Database Name</th>
+                                                <th>Company Logo</th>
+                                                <th>Service Layer URL</th>
+                                                <th>Service Layer Username</th>
+                                                <th>Service Layer Password</th>
+                                                <th>Action</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tablegridtbody">
+                                            @{
+                                                int i = 1;
+                                                foreach (var company in ViewBag.CompanyConfiguration)
+                                                {
+                                                    <tr>
+                                                        <td>@i</td>
+                                                        <td class="companyid">@company.ID</td>
+                                                        <td>@company.DatabaseName</td>
+                                                        <td><img src="@company.CompanyLogo" style="height:70px;width:70px;border-radius:50%" /></td>
+                                                        <td>@company.ServiceLayerURL</td>
+                                                        <td>@company.ServiceLayerUsername</td>
+                                                        <td>@company.ServiceLayerPassword</td>
+                                                        <td><input class="isChecked" id='CompanySelected_@company.ID' type="checkbox" /></td>
+                                                    </tr>
+
+                                                    i++;
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+
+
+
+                                </div>
+
+
+                                <div class="tab-pane" id="FormsTab" role="tabpanel">
+
+                                    <table id="fixed-header1" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                                        <thead class="tablegrid">
+                                            <tr>
+
+                                                <th>Sr #</th>
+                                                <th>ID</th>
+                                                <th>Form Name</th>
+                                                <th>Can Create</th>
+                                                <th>Can View</th>
+                                                <th>Can Update</th>
+                                                <th>Can Delete</th>
+                                             
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tablegridtbody1">
+                                            @{
+                                                int j = 1;
+                                                foreach (var form in ViewBag.Forms)
+                                                {
+                                                    <tr>
+                                                        <td>@j</td>
+                                                        <td class="formid">@form.FormId</td>
+                                                        <td>@form.FormName</td>
+                                                        <td><input class="isCreateChecked" id='CanCreate_@form.FormId' type="checkbox" /></td>
+                                                        <td><input class="isViewChecked" id='CanView_@form.FormId' type="checkbox" /></td>
+                                                        <td><input class="isUpdateChecked" id='CanUpdate_@form.FormId' type="checkbox" /></td>
+                                                        <td><input class="isDeleteChecked" id='CanDelete_@form.FormId' type="checkbox" /></td>
+                                                    </tr>
+
+                                                    j++;
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+
+
+
+                                </div>
+
+                            </div>
+
+
+
+
+                    
+
+                        </div>
                        
                         <div class="col-lg-12">
                             <div class="hstack gap-2 justify-content-end">
@@ -203,13 +308,14 @@
 
  
     <script type="text/javascript">
-
- 
+        var companyconfigurations = null;
         $(document).ready(function () {
 
 
             GetUserList();
         });
+
+
 
         $("#changePasswordIcon").click(function () {
             debugger;
@@ -242,7 +348,22 @@
                 confirmDelete(id)
             })
         }
+        function AddContentRow() {
 
+            var rowno = parseInt($("#CompanyConfigurationrowno").val());
+            var tr = "<tr id='CompanyConfigurationrowno_" + rowno + "' ><td>" + rowno + "</td>" +
+                "<td><select class='form-control company' id='CompanyConfiguration_" + rowno + "'></Select></td>" +
+                    "<td><i onclick='DeleteCCRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
+                $("#tablegridtbody").append(tr);
+            SetCompanyConfigurationDropDown(rowno, null);
+                rowno = rowno + 1;
+            $("#CompanyConfigurationrowno").val(rowno)
+           
+            
+        }
+        function DeleteCCRow(id){
+            $("#CompanyConfigurationrowno_" + id).remove();
+        }
         function confirmDelete(id) {
 
             var url = "/api/PortalUsers/DeleteUser?id=" + id + "";
@@ -293,6 +414,8 @@
             var url = '/api/PortalUsers/AddUser';
 
             var user = new Object();
+            var UserCompanies = new Array();
+            var UserPermissions = new Array();
 
             if ($("#ID").val() != "") {
                 debugger;
@@ -312,6 +435,54 @@
             user.DOB = $("#dob").val();
             user.IsAdmin = admin;
             user.Gender = selectedValue;
+            $('#tablegridtbody tr').each(function () {
+
+                var row = $(this);
+                var checked = row.find('.isChecked').is(":checked");
+
+                if (checked == true) {
+
+                    var usercompany = new Object();
+
+
+                    usercompany.DatabaseId = parseInt( row.find('.companyid').text());
+                    usercompany.UserID = parseInt('@Context.Session.GetString("ID")');
+                    usercompany.PortalUsersID = parseInt(user.id);
+
+                    UserCompanies.push(usercompany);
+                }
+            });
+
+
+            $('#tablegridtbody1 tr').each(function () {
+
+                var row = $(this);
+                var checked = row.find('.isChecked').is(":checked");
+
+
+                    var userpermission = new Object();
+
+
+                userpermission.FormId = parseInt(row.find('.formid').text());
+                userpermission.UserID = parseInt(user.id);
+                userpermission.PortalUsersID = parseInt(user.id);
+                userpermission.CanCreate = row.find('.isCreateChecked').is(":checked");
+                userpermission.CanView = row.find('.isViewChecked').is(":checked");
+                userpermission.CanUpdate = row.find('.isUpdateChecked').is(":checked");
+                userpermission.CanDelete = row.find('.isDeleteChecked').is(":checked");
+
+                UserPermissions.push(userpermission);
+
+            });
+
+
+
+
+
+
+
+            user.UserCompanies = UserCompanies;
+            user.UserPermissions = UserPermissions;
 
 
             var ModelData = JSON.stringify(user);
@@ -334,7 +505,7 @@
                         $("#AddUserModal").modal("hide");
                         Swal.fire({
                             title: "Congratlations",
-                            text: "UserCreated Successfully",
+                            text: response.message,
                             icon: "success",
                             showCancelButton: !0,
                             customClass: {
@@ -422,6 +593,7 @@
                 contentType: 'application/json',
                 success: function (response) {
                     debugger;
+
                     if (response.code === 100) {
 
                         var data = response.data;
@@ -447,6 +619,22 @@
                         $('#IsAdmin').prop('checked', admin == 1);
                         $("#submit").text("Update");
                         $("#AddUserModalLabel").text("User Details");
+                        $("#tablegridtbody .isChecked").prop("checked", false);
+
+                        if (data.userCompanies!=null){
+                            for (let selectedCompany of data.userCompanies) {
+                                $("#CompanySelected_" + selectedCompany.databaseId).prop("checked", true);
+                            }
+                        }
+                        if (data.userPermissions != null) {
+                            for (let selectedPermission of data.userPermissions) {
+
+                                selectedPermission.canCreate == true ? $("#CanCreate_" + selectedPermission.formId).prop("checked", true) : $("#CanCreate_" + selectedPermission.formId).prop("checked", false);
+                                selectedPermission.canView == true ? $("#CanView_" + selectedPermission.formId).prop("checked", true) : $("#CanView_" + selectedPermission.formId).prop("checked", false);
+                                selectedPermission.canUpdate == true ? $("#CanUpdate_" + selectedPermission.formId).prop("checked", true) : $("#CanUpdate_" + selectedPermission.formId).prop("checked", false);
+                                selectedPermission.canDelete == true ? $("#CanDelete_" + selectedPermission.formId).prop("checked", true) : $("#CanDelete_" + selectedPermission.formId).prop("checked", false);
+                            }
+                        }
                     }
                     else {
                         alert(response.message);
@@ -498,6 +686,7 @@
             $("#dob").val("");
             $('#IsAdmin').prop('checked', false);
             $('input[name="inlineRadioOptions"]').prop('checked', false);
+            $('#AddUserModal input[type=checkbox]').prop('checked', false);
             $("#submit").text("Submit");
             $("#AddUserModalLabel").text("Create A User");
         }

@@ -15,12 +15,11 @@ namespace B1WEB.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PortalUsersController : ControllerBase
+    public class CompanyConfigrationController : ControllerBase
     {
         private readonly MyAppContext _context;
- 
 
-        public PortalUsersController(MyAppContext context)
+        public CompanyConfigrationController(MyAppContext context)
         {
             _context = context;
         }
@@ -33,7 +32,7 @@ namespace B1WEB.Controllers.Api
             try
             {
 
-                var result = _context.PortalUsers.Where(x => x.IsActive==true)
+                var result = _context.CompanyConfiguration.Where(x => x.IsActive == true)
                                            .ToList();
 
                 return Ok(new ApiResponse<object>
@@ -56,8 +55,9 @@ namespace B1WEB.Controllers.Api
             try
             {
 
-                var result = _context.PortalUsers.Include(x=>x.UserCompanies).Include(x=>x.UserPermissions).Where(x => x.IsActive == true && x.ID==id)
+                var result = _context.CompanyConfiguration.Where(x => x.IsActive == true && x.ID == id)
                                            .FirstOrDefault();
+
                 return Ok(new ApiResponse<object>
                 {
                     Code = ResponseCode.Success,
@@ -72,8 +72,8 @@ namespace B1WEB.Controllers.Api
         }
 
         [HttpPost]
-        [Route("AddUser")]
-        public IActionResult AddUser(PortalUsers model)
+        [Route("AddCompanyConfigration")]
+        public IActionResult AddUser(CompanyConfiguration model)
         {
             try
             {
@@ -85,58 +85,21 @@ namespace B1WEB.Controllers.Api
                         Message = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))
                     });
                 }
-               var checkuserexist= _context.PortalUsers.Where(x=>x.Email== model.Email).FirstOrDefault();
-                if (checkuserexist != null)
-                {
-
-                    return Ok(new ApiResponse<object>
-                    {
-                        Code = ResponseCode.Conflict,
-                        Message = "Email Already Exsist"
-                    });
-                }
-               var checkuserName= _context.PortalUsers.Where(x=>x.UserName== model.UserName).FirstOrDefault();
-                if (checkuserName != null)
-                {
-
-                    return Ok(new ApiResponse<object>
-                    {
-                        Code = ResponseCode.Conflict,
-                        Message = "Username Already Exsist"
-                    });
-                }
-               var checkusercnic= _context.PortalUsers.Where(x=>x.CNIC== model.CNIC).FirstOrDefault();
-                if (checkusercnic != null)
-                {
-
-                    return Ok(new ApiResponse<object>
-                    {
-                        Code = ResponseCode.Conflict,
-                        Message = "CNIC Already Exsist"
-                    });
-                }
-
+            
                 model.CreatedOn = DateTime.Now;
                 model.UpdatedOn = DateTime.Now;
                 model.IsActive = model.IsActive;
-                model.CreatedBy = 1;
-                model.UpdatedBy = 1;
+                model.CreatedByUserID = 1;
+                model.UpdatedByUserID = 1;
                 model.IsActive = true;
 
-                _context.PortalUsers.Add(model);
-
-
-
+                _context.CompanyConfiguration.Add(model);
                 _context.SaveChanges();
-
-
-
-
 
                 return Ok(new ApiResponse<object>
                 {
                     Code = ResponseCode.Success,
-                    Message = "User added Successfully",
+                    Message = "Company Configration added Successfully",
                     Data = null
                 });
             }
@@ -147,8 +110,8 @@ namespace B1WEB.Controllers.Api
         }
 
         [HttpPost]
-        [Route("UpdateUser")]
-        public IActionResult UpdateUser([FromBody] PortalUsers model)
+        [Route("UpdateCompanyConfigration")]
+        public IActionResult UpdateCompanyConfigration([FromBody] CompanyConfiguration model)
         {
             try
             {
@@ -161,50 +124,28 @@ namespace B1WEB.Controllers.Api
                     });
                 }
 
-                var data = _context.PortalUsers.Include(x => x.UserCompanies).Include(x => x.UserPermissions).Where(x => x.ID == model.ID).FirstOrDefault();
+                var data = _context.CompanyConfiguration.Find(model.ID);
 
-              
                 if (data != null)
                 {
 
                     data.UpdatedOn = DateTime.Now;
-                    data.UpdatedBy = 1;
-                    data.UserName = model.UserName;
-                    data.FirstName = model.FirstName;
-                    data.LastName = model.LastName;
-                    data.Image = model.Image;
-                    data.DOB = model.DOB;
-                    data.Phone = model.Phone;
-                    data.CNIC = model.CNIC;
-                    data.Email = model.Email;
-                    data.Password = model.Password;
-                    data.Gender = model.Gender;
-                    data.IsAdmin = model.IsAdmin;
-                    data.IsActive = true;
+                    data.UpdatedByUserID = 1;
+                    data.DatabaseName = model.DatabaseName;
+                    data.CompanyLogo = model.CompanyLogo;
+                    data.ServiceLayerURL = model.ServiceLayerURL;
+                    data.ServiceLayerUsername = model.ServiceLayerUsername;
+                    data.ServiceLayerPassword = model.ServiceLayerPassword;
+                   
 
-                    _context.Entry(data).State = EntityState.Modified;
-
-                    if (model.UserCompanies?.Count >= 0)
-                    {
-                        _context.RemoveRange(data.UserCompanies);
-                        _context.SaveChanges();
-                    }
-                    _context.AddRange(model.UserCompanies);
-
-                    if (model.UserPermissions?.Count > 0)
-                    {
-                        _context.RemoveRange(data.UserPermissions);
-                        _context.SaveChanges();
-                    }
-                    _context.AddRange(model.UserPermissions);
-
-
+                    _context.Update(data);
                     _context.SaveChanges();
+
                     return Ok(new ApiResponse<object>
                     {
                         Code = ResponseCode.Success,
-                        Message = "User Updated Successfully",
-                        Data = null
+                        Message = "Company Configuration Updated Successfully",
+                        Data = model
                     });
                 }
                 else
@@ -225,12 +166,12 @@ namespace B1WEB.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("DeleteUser")]
-        public IActionResult DeleteUser(int id)
+        [Route("DeleteCompanyConfigration")]
+        public IActionResult DeleteCompanyConfigration(int id)
         {
             try
             {
-                var data = _context.PortalUsers.Find(id);
+                var data = _context.CompanyConfiguration.Find(id);
                 data.UpdatedOn = DateTime.Now;
                 data.IsActive = false;
 
@@ -251,5 +192,4 @@ namespace B1WEB.Controllers.Api
         }
 
     }
- 
 }

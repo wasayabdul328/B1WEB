@@ -10,6 +10,9 @@ namespace B1WEB.DBContext
         {
         }
         public DbSet<PortalUsers> PortalUsers { get; set; }
+        public DbSet<CompanyConfiguration> CompanyConfiguration { get; set; }
+        public DbSet<UserCompany> UserCompany { get; set; }
+        public DbSet<UserPermission> UserPermission { get; set; }
 
     }
 }
