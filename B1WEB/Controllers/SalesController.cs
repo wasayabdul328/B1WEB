@@ -12,5 +12,17 @@ namespace B1WEB.Controllers
         {
             return View();
         }
+        public IActionResult SalesReturn()
+        {
+            return View();
+        }
+        public IActionResult ARInvoice()
+        {
+            return View();
+        }
+        public IActionResult Inventory()
+        {
+            return View();
+        }
     }
 }

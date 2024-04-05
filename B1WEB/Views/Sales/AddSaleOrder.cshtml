@@ -11,8 +11,9 @@
 <div class="container-fluid">
     <div class="row">
 
-     
-   
+
+@*         <a class="btn btn-danger" onclick="openmodalAdd()" data-bs-toggle="modal" data-bs-target="#AddUserModal"><i class="ri-add-line align-bottom me-1"></i> Create A User</a>
+ *@
        <div class="card">
            <div class="card-body">
                 @*    Header Fields Section Starts here*@
@@ -21,7 +22,7 @@
                         <div class="col-lg-4">
                             <label for="CardCode" class="form-label">Customer</label>
                             <div class="input-group input-group">
-                                <span class="input-group-text"><i class="ri-file-list-fill"></i></span>
+                                <a class="input-group-text" data-bs-toggle="modal" data-bs-target="#CustomerlistModal"><i class="ri-file-list-fill"></i></a>
                                 <input type="text" id="CardCode" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                             </div>
 
@@ -29,10 +30,12 @@
                             <input class="form-control" id="CardName" />
 
                             <label for="ContactPerson" class="form-label">Contact Person</label>
-                            <div class="input-group input-group">
-                                <span class="input-group-text"><i class="ri-file-list-fill"></i></span>
-                                <input type="text" id="ContactPerson" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                            </div>
+                           
+                            <select id="ContactPerson" class="form-control">
+                                    <option value="Admin">Admin</option>
+                                    <option value="Alex">Alex</option>
+                                    <option value="Senthil">Senthil</option>
+                                </select>
 
                             <label for="CardName" class="form-label">Customer Ref No.</label>
                             <input class="form-control" id="CustomerRefNo" />
@@ -83,11 +86,11 @@
                                 Contents
                             </a>
                         </li>
-                        <li class="nav-item">
+                      @*   <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#ContentsTab" role="tab" aria-selected="false">
                                 Logistics
                             </a>
-                        </li>
+                        </li> *@
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#AccountingTab" role="tab" aria-selected="false">
                                 Accounting
@@ -98,11 +101,11 @@
                                 Remarks
                             </a>
                         </li>
-                        <li class="nav-item">
+                       @*  <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#ActivitiesTab" role="tab" aria-selected="false">
                                 Activities
                             </a>
-                        </li>
+                        </li> *@
 
                     </ul>
                     <div class="tab-content">
@@ -114,11 +117,29 @@
 
                         <div class="tab-pane" id="LogisticsTab" role="tabpanel">
                         </div>
+                        
+
+                        <div class="tab-pane" id="RemarksTab" role="tabpanel">
+
+                            <div class="col-6">
+                                <label for="remarkst" class="form-label">Remarks</label>
+                                <textarea type="text" class="form-control" id="remakst"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="AccountingTab" role="tabpanel">
+                            <partial name="~/Views/PartialLayouts/SaleOrder/_saleorderaccountingtab.cshtml"   />
+                        </div>
+
 
                     </div>
+
+                       
+
+
                 </div>
 
-                <div class="col-12">
+                <div class="col-12 mt-5">
                     <div class="row">
                         <div class="col-lg-3">
                             <label for="SalesEmployee" class="form-label">Sales Employee</label>
@@ -177,6 +198,78 @@
 
     </div>
 </div>
+
+@* <div class="modal fade flip" id="CustomerlistModal" tabindex="-1" aria-labelledby="CustomerListModalLabel" aria-modal="true">
+ *@<div class="modal modal-xl" id="CustomerlistModal" tabindex="-1" aria-labelledby="CustomerListModalLabel" aria-modal="true">
+    <div class="modal-dialog zoomIn">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CustomerListModalLabel">Select Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table id="fixed-header" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                    <thead class="tablegrid">
+                        <tr>
+
+                            <th>Sr #</th>
+                            <th>Customer Code</th>
+                            <th>Customer Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                1
+                            </td>
+                            <td>
+                                100001
+                            </td>
+                            <td>
+                                Abdul rehman
+                            </td>
+                            
+                            <td>
+                                <button class="btn btn-sm btn-secondary">Select
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                2
+                            </td>
+                            <td>
+                                100002
+                            </td>
+                            <td>
+                                Abdul wasay
+                            </td>
+                            
+                            
+                            <td>
+
+                                <button class="btn btn-sm btn-secondary">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+                        
+
+                    </tbody>
+                </table>
+
+                <div class="col-lg-12">
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div><!--end col-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @section Script {
   

@@ -1,0 +1,353 @@
+﻿@{
+    ViewData["Title"] = "Sales Return List";
+}
+
+@section CSS {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+}
+
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <h5 style="font-size:32px" class="card-title mb-0 flex-grow-1">A/R Invoice List</h5>
+                            <div class="flex-shrink-0">
+                                <div class="d-flex gap-2 flex-wrap">
+                                    @*    <button class="btn btn-primary" id="remove-actions" onclick="deleteMultiple()" style="display: none;"><i class="ri-delete-bin-2-line"></i></button> *@
+                                    @*                                     <a href="/Sales/AddSaleOrder" class="btn btn-danger"><i class="ri-add-line align-bottom me-1"></i> Add Sale Order</a>
+                                    *@
+                                </div>
+                            </div>
+                        </div>
+                        @*   <h5 class="card-title mb-0">  Sales Order List <a style="float:right" href="/Sales/AddSaleOrder" class="btn btn-primary btn-sm"> <i class="ri-file-add-line"></i> Add Sale Order</a></h5> *@
+                    </div>
+                    <div class="card-body">
+                        <table id="fixed-header" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                            <thead class="tablegrid">
+                                <tr>
+
+                                    <th>Sr #</th>
+                                    <th>Doc Num</th>
+                                    <th>Customer</th>
+                                    <th>Name</th>
+                                    <th>Doc Date</th>
+                                    <th>Due Date</th>
+                                    <th>Posting Date</th>
+                                    <th>Doc Total</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        1
+                                    </td>
+                                    <td>
+                                        100001
+                                    </td>
+                                    <td>
+                                        CQT0002
+                                    </td>
+                                    <td>
+                                        Q Tech General Trading LLC
+                                    </td>
+                                    <td>
+                                        2024/03/29
+                                    </td>
+                                    <td>
+                                        2024/03/29
+                                    </td>
+                                    <td>
+                                        2024/03/29
+                                    </td>
+                                    <td>
+                                        20000
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success-subtle text-success text-uppercase">Open</span>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#CustomerlistModal"><i class="ri-eye-fill align-bottom me-2" "></i></a>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        2
+                                    </td>
+                                    <td>
+                                        100002
+                                    </td>
+                                    <td>
+                                        CRNA001
+                                    </td>
+                                    <td>
+                                        RNA RESOURCES GROUP LT
+                                    </td>
+                                    <td>
+                                        2024/03/30
+                                    </td>
+                                    <td>
+                                        2024/03/30
+                                    </td>
+                                    <td>
+                                        2024/03/30
+                                    </td>
+                                    <td>
+                                        3000
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-danger-subtle text-danger text-uppercase">Close</span>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#CustomerlistModal"><i class="ri-eye-fill align-bottom me-2" "></i></a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        3
+                                    </td>
+                                    <td>
+                                        100003
+                                    </td>
+                                    <td>
+                                        CQT0005
+                                    </td>
+                                    <td>
+                                        QLA Electronics
+                                    </td>
+                                    <td>
+                                        2024/03/29
+                                    </td>
+                                    <td>
+                                        2024/03/29
+                                    </td>
+                                    <td>
+                                        2024/03/29
+                                    </td>
+                                    <td>
+                                        20000
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success-subtle text-success text-uppercase">Open</span>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#CustomerlistModal"><i class="ri-eye-fill align-bottom me-2" "></i></a>
+
+
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        4
+                                    </td>
+                                    <td>
+                                        100004
+                                    </td>
+                                    <td>
+                                        CRNA001
+                                    </td>
+                                    <td>
+                                        RESOURCES Technologies
+                                    </td>
+                                    <td>
+                                        2024/03/30
+                                    </td>
+                                    <td>
+                                        2024/03/30
+                                    </td>
+                                    <td>
+                                        2024/03/30
+                                    </td>
+                                    <td>
+                                        3000
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-danger-subtle text-danger text-uppercase">Close</span>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#CustomerlistModal"><i class="ri-eye-fill align-bottom me-2" "></i></a>
+
+                                    </td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div><!--end row-->
+
+        </div>
+
+    </div>
+</div>
+<div class="modal modal-lg" id="CustomerlistModal" tabindex="-1" aria-labelledby="CustomerlistModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CustomerlistModalLabel">Invoice Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+
+                        <div class="col-6">
+                            <label for="CardCode" class="form-label">Customer</label>
+                            <div class="input-group">
+                                <input type="text" id="CardCode" disabled class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="CardName" class="form-label">Customer Name</label>
+                            <input class="form-control" disabled id="CardName" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="ContactPerson" class="form-label">Contact Person</label>
+                            <input class="form-control" disabled id="ContactPerson" />
+
+                        </div>
+                        <div class="col-6">
+                            <label for="CustomerRefNo" class="form-label">Customer Ref No.</label>
+                            <input class="form-control" disabled id="CustomerRefNo" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="Series" class="form-label">Series</label>
+                            <input class="form-control" disabled id="Series" />
+                        </div>
+                        <div class="col-6">
+                            <label for="DocNum" class="form-label">No.</label>
+                            <input id="DocNum" disabled class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-6">
+                            <label for="Status" class="form-label">Status</label>
+                            <input disabled class="form-control" value="Open" id="Status" />
+                        </div>
+                        <div class="col-6">
+                            <label for="PostingDate" class="form-label">Posting Date</label>
+                            <input disabled type="date" class="form-control" id="PostingDate" value="2024-12-03" />
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-6">
+                            <label for="DeliveryDate" class="form-label">Delivery Date</label>
+                            <input disabled type="date" class="form-control" id="DeliveryDate" value="2024-12-07" />
+                        </div>
+                        <div class="col-6">
+                            <label for="DocumentDate" class="form-label">Document Date</label>
+                            <input disabled type="date" class="form-control" id="DocumentDate" value="2024-12-03" />
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#ContentsTab" role="tab" aria-selected="true">Contents</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="ContentsTab" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <label for="ItmOrServ">Item Type</label>
+                                        <select id="ItmOrServ" class="form-control">
+                                            <option value="item">Item</option>
+                                            @*  <option value="service">Service</option> *@
+                                        </select>
+                                    </div>
+                                    <div class="col-8"></div>
+                                    <div class="col-2">
+                                        @*                                         <a class="btn btn-primary btn-sm" style="float:right" onclick="AddContentRow()">Add Row</a>
+                                        *@
+                                    </div>
+                                </div>
+                                <div id="Itemtype" class="row mt-2">
+                                    <input type="number" hidden id="contentrowno" value="1" />
+                                    <div class="col-12">
+                                        <table class="table w-100" style="min-height:150px;overflow-y:scroll">
+                                            <thead class="tablegrid">
+                                                <tr>
+                                                    <th>Sr #</th>
+                                                    <th>Item Code</th>
+                                                    <th>Item Description</th>
+                                                    <th>Quantity</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Tax</th>
+                                                    <th>Discount %</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tablegridtbody">
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>001</td>
+                                                    <td>Sap Services</td>
+                                                    <td>123</td>
+                                                    <td>100</td>
+                                                    <td>50</td>
+                                                    <td>5</td>
+                                                    <td>7000</td>
+                                                </tr>
+                                                <!-- Table rows will be dynamically added here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <!-- Additional buttons or footer content can be added here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Script {
+    <!--datatable js-->
+
+
+    <script src="~/cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="~/cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    @*     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+ *@
+
+    <script>
+
+        $(document).ready(function () {
+            $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"] });
+        });
+    </script>
+}
