@@ -40,812 +40,49 @@
                                         <th>Customer</th>
                                         <th>Name</th>
                                         <th>Doc Date</th>
-                                        <th>Delivery Date</th>
-                                        <th>Posting Date</th>
-                                        <th>Doc Total</th>
+                                        <th>Due Date</th>
+                                         <th>Doc Total</th> 
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                       1
-                                    </td>
-                                        <td>
-                                            100001
-                                        </td>
-                                        <td>
-                                        CQT0002
-                                        </td>
-                                        <td>
-                                        Q Tech General Trading LLC
-                                        </td>
-                                        <td>
-                                            2024/03/29
-                                        </td>
-                                        <td>
-                                            2024/03/29
-                                        </td>
-                                        <td>
-                                            2024/03/29
-                                        </td>
-                                        <td>
-                                           20000
-                                        </td>   
-                                        <td>
-                                        <span class="badge bg-success-subtle text-success text-uppercase">Open</span>
-                                        </td>
-                                        <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2" "></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-
-                                    </td>
-                                    </tr>
-                                <tr>
-                                    <td>
-                                        2
-                                    </td>
-                                    <td>
-                                        100002
-                                    </td>
-                                    <td>
-                                        CRNA001
-                                    </td>
-                                    <td>
-                                        RNA RESOURCES GROUP LT
-                                    </td>
-                                    <td>
-                                        2024/03/30
-                                    </td>
-                                    <td>
-                                        2024/03/30
-                                    </td>
-                                    <td>
-                                        2024/03/30
-                                    </td>
-                                    <td>
-                                       3000
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-danger-subtle text-danger text-uppercase">Close</span>
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2""></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
+                                @{
+                                    int srno = 1;
+                                    foreach (var value in ViewBag.SalesOrders)
+                                    {
+                                        <tr>
+                                            <td>@srno</td>
+                                            <td>@value.DocNum</td>
+                                            <td>@value.CardCode</td>
+                                            <td>@value.CardName</td>
+                                            <td>@value.DocDate</td>
+                                            <td>@value.DocDueDate</td>
+                                            <td>@value.DocTotal</td>
                                        
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        3
-                                    </td>
-                                    <td>
-                                        100003
-                                    </td>
-                                    <td>
-                                        CQT0005
-                                    </td>
-                                    <td>
-                                        QLA Electronics
-                                    </td>
-                                    <td>
-                                        2024/03/29
-                                    </td>
-                                    <td>
-                                        2024/03/29
-                                    </td>
-                                    <td>
-                                        2024/03/29
-                                    </td>
-                                    <td>
-                                        20000
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-success-subtle text-success text-uppercase">Open</span>
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2" "></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
+                                            <td>@{
+                                                    if (value.DocStatus == "O")
+                                                    {
+                                                        <span class="badge bg-success-subtle text-success text-uppercase">Open</span>
+                                                    }
+                                                    else
+                                                    {
 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        4
-                                    </td>
-                                    <td>
-                                        100004
-                                    </td>
-                                    <td>
-                                        CRNA001
-                                    </td>
-                                    <td>
-                                         RESOURCES Technologies
-                                         </td>
-                                    <td>
-                                        2024/03/30
-                                    </td>
-                                    <td>
-                                        2024/03/30
-                                    </td>
-                                    <td>
-                                        2024/03/30
-                                    </td>
-                                    <td>
-                                        3000
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-danger-subtle text-danger text-uppercase">Close</span>
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2" "></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
+                                                        <span class="badge bg-success-subtle text-success text-uppercase">@value.DocStatus</span>
 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>100005</td>
-                                    <td>CQT0006</td>
-                                    <td>ABC Trading Company</td>
-                                    <td>2024/03/31</td>
-                                    <td>2024/03/31</td>
-                                    <td>2024/03/31</td>
-                                    <td>15000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td>100006</td>
-                                    <td>CRNA002</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/04/01</td>
-                                    <td>2024/04/01</td>
-                                    <td>2024/04/01</td>
-                                    <td>18000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>7</td>
-                                    <td>100007</td>
-                                    <td>CQT0007</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/04/02</td>
-                                    <td>2024/04/02</td>
-                                    <td>2024/04/02</td>
-                                    <td>25000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>8</td>
-                                    <td>100008</td>
-                                    <td>CRNA003</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/04/03</td>
-                                    <td>2024/04/03</td>
-                                    <td>2024/04/03</td>
-                                    <td>32000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>9</td>
-                                    <td>100009</td>
-                                    <td>CQT0008</td>
-                                    <td>ABC Corporation</td>
-                                    <td>2024/04/04</td>
-                                    <td>2024/04/04</td>
-                                    <td>2024/04/04</td>
-                                    <td>28000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>10</td>
-                                    <td>100010</td>
-                                    <td>CRNA004</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/04/05</td>
-                                    <td>2024/04/05</td>
-                                    <td>2024/04/05</td>
-                                    <td>2024545</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                    </tr>
-                                <tr>
-                                    <td>11</td>
-                                    <td>100011</td>
-                                    <td>CQT0011</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/04/06</td>
-                                    <td>2024/04/06</td>
-                                    <td>2024/04/06</td>
-                                    <td>18000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>12</td>
-                                    <td>100012</td>
-                                    <td>CRNA005</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/04/07</td>
-                                    <td>2024/04/07</td>
-                                    <td>2024/04/07</td>
-                                    <td>21000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>13</td>
-                                    <td>100013</td>
-                                    <td>CQT0013</td>
-                                    <td>ABC Corporation</td>
-                                    <td>2024/04/08</td>
-                                    <td>2024/04/08</td>
-                                    <td>2024/04/08</td>
-                                    <td>24000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>14</td>
-                                    <td>100014</td>
-                                    <td>CRNA006</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/04/09</td>
-                                    <td>2024/04/09</td>
-                                    <td>2024/04/09</td>
-                                    <td>28000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>15</td>
-                                    <td>100015</td>
-                                    <td>CQT0015</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/04/10</td>
-                                    <td>2024/04/10</td>
-                                    <td>2024/04/10</td>
-                                    <td>32000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>16</td>
-                                    <td>100016</td>
-                                    <td>CRNA007</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/04/11</td>
-                                    <td>2024/04/11</td>
-                                    <td>2024/04/11</td>
-                                    <td>27000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>17</td>
-                                    <td>100017</td>
-                                    <td>CQT0017</td>
-                                    <td>ABC Corporation</td>
-                                    <td>2024/04/12</td>
-                                    <td>2024/04/12</td>
-                                    <td>2024/04/12</td>
-                                    <td>30000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>18</td>
-                                    <td>100018</td>
-                                    <td>CRNA008</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/04/13</td>
-                                    <td>2024/04/13</td>
-                                    <td>2024/04/13</td>
-                                    <td>29000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>19</td>
-                                    <td>100019</td>
-                                    <td>CQT0019</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/04/14</td>
-                                    <td>2024/04/14</td>
-                                    <td>2024/04/14</td>
-                                    <td>23000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>20</td>
-                                    <td>100020</td>
-                                    <td>CRNA009</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/04/15</td>
-                                    <td>2024/04/15</td>
-                                    <td>2024/04/15</td>
-                                    <td>26000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>21</td>
-                                    <td>100021</td>
-                                    <td>CQT0021</td>
-                                    <td>ABC Corporation</td>
-                                    <td>2024/04/16</td>
-                                    <td>2024/04/16</td>
-                                    <td>2024/04/16</td>
-                                    <td>31000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>22</td>
-                                    <td>100022</td>
-                                    <td>CRNA010</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/04/17</td>
-                                    <td>2024/04/17</td>
-                                    <td>2024/04/17</td>
-                                    <td>34000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>23</td>
-                                    <td>100023</td>
-                                    <td>CQT0023</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/04/18</td>
-                                    <td>2024/04/18</td>
-                                    <td>2024/04/18</td>
-                                    <td>37000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>24</td>
-                                    <td>100024</td>
-                                    <td>CRNA011</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/04/19</td>
-                                    <td>2024/04/19</td>
-                                    <td>2024/04/19</td>
-                                    <td>41000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>25</td>
-                                    <td>100025</td>
-                                    <td>CQT0025</td>
-                                    <td>ABC Corporation</td>
-                                    <td>2024/04/20</td>
-                                    <td>2024/04/20</td>
-                                    <td>2024/04/20</td>
-                                    <td>43000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>26</td>
-                                    <td>100026</td>
-                                    <td>CRNA012</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/04/21</td>
-                                    <td>2024/04/21</td>
-                                    <td>2024/04/21</td>
-                                    <td>45000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>27</td>
-                                    <td>100027</td>
-                                    <td>CQT0027</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/04/22</td>
-                                    <td>2024/04/22</td>
-                                    <td>2024/04/22</td>
-                                    <td>48000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>28</td>
-                                    <td>100028</td>
-                                    <td>CRNA013</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/04/23</td>
-                                    <td>2024/04/23</td>
-                                    <td>2024/04/23</td>
-                                    <td>49000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>29</td>
-                                    <td>100029</td>
-                                    <td>CQT0029</td>
-                                    <td>ABC Corporation</td>
-                                    <td>2024/04/24</td>
-                                    <td>2024/04/24</td>
-                                    <td>2024/04/24</td>
-                                    <td>52000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>30</td>
-                                    <td>100030</td>
-                                    <td>CRNA014</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/04/25</td>
-                                    <td>2024/04/25</td>
-                                    <td>2024/04/25</td>
-                                    <td>55000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>31</td>
-                                    <td>100031</td>
-                                    <td>CQT0031</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/04/26</td>
-                                    <td>2024/04/26</td>
-                                    <td>2024/04/26</td>
-                                    <td>58000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>32</td>
-                                    <td>100032</td>
-                                    <td>CRNA015</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/04/27</td>
-                                    <td>2024/04/27</td>
-                                    <td>2024/04/27</td>
-                                    <td>61000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>33</td>
-                                    <td>100033</td>
-                                    <td>CQT0033</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/04/28</td>
-                                    <td>2024/04/28</td>
-                                    <td>2024/04/28</td>
-                                    <td>63000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>34</td>
-                                    <td>100034</td>
-                                    <td>CRNA016</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/04/29</td>
-                                    <td>2024/04/29</td>
-                                    <td>2024/04/29</td>
-                                    <td>66000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>35</td>
-                                    <td>100035</td>
-                                    <td>CQT0035</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/04/30</td>
-                                    <td>2024/04/30</td>
-                                    <td>2024/04/30</td>
-                                    <td>68000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>36</td>
-                                    <td>100036</td>
-                                    <td>CRNA017</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/05/01</td>
-                                    <td>2024/05/01</td>
-                                    <td>2024/05/01</td>
-                                    <td>71000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>37</td>
-                                    <td>100037</td>
-                                    <td>CQT0037</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/05/02</td>
-                                    <td>2024/05/02</td>
-                                    <td>2024/05/02</td>
-                                    <td>73000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>38</td>
-                                    <td>100038</td>
-                                    <td>CRNA018</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/05/03</td>
-                                    <td>2024/05/03</td>
-                                    <td>2024/05/03</td>
-                                    <td>76000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>39</td>
-                                    <td>100039</td>
-                                    <td>CQT0039</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/05/04</td>
-                                    <td>2024/05/04</td>
-                                    <td>2024/05/04</td>
-                                    <td>78000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>40</td>
-                                    <td>100040</td>
-                                    <td>CRNA019</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/05/05</td>
-                                    <td>2024/05/05</td>
-                                    <td>2024/05/05</td>
-                                    <td>81000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>41</td>
-                                    <td>100041</td>
-                                    <td>CQT0041</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/05/06</td>
-                                    <td>2024/05/06</td>
-                                    <td>2024/05/06</td>
-                                    <td>84000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>42</td>
-                                    <td>100042</td>
-                                    <td>CRNA020</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/05/07</td>
-                                    <td>2024/05/07</td>
-                                    <td>2024/05/07</td>
-                                    <td>87000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>43</td>
-                                    <td>100043</td>
-                                    <td>CQT0043</td>
-                                    <td>PQR Corporation</td>
-                                    <td>2024/05/08</td>
-                                    <td>2024/05/08</td>
-                                    <td>2024/05/08</td>
-                                    <td>90000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>44</td>
-                                    <td>100044</td>
-                                    <td>CRNA021</td>
-                                    <td>XYZ Corporation</td>
-                                    <td>2024/05/09</td>
-                                    <td>2024/05/09</td>
-                                    <td>2024/05/09</td>
-                                    <td>93000</td>
-                                    <td><span class="badge bg-success-subtle text-success text-uppercase">Open</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>45</td>
-                                    <td>100045</td>
-                                    <td>CQT0045</td>
-                                    <td>LMN Corporation</td>
-                                    <td>2024/05/10</td>
-                                    <td>2024/05/10</td>
-                                    <td>2024/05/10</td>
-                                    <td>96000</td>
-                                    <td><span class="badge bg-danger-subtle text-danger text-uppercase">Close</span></td>
-                                    <td>
-                                        <a class="btn btn-sm btn-secondary"><i class="ri-eye-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>
-                                        <a class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
-                                    </td>
-                                </tr>
-
-
+                                                    }
+                                                }
+                                            
+                                          
+                                            <td>
+                                                <a class="btn btn-sm btn-secondary" href="/Sales/ViewSaleOrder?docNum=@value.DocEntry"><i class="ri-eye-fill align-bottom me-2"></i></a>
+                                                <a onclick="ClosesaleOrder('@value.DocEntry')" class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>
+                                            </td>
+                                        </tr>
+                                        srno = srno+1;
+                                    }
+                                }
+                          
                               </tbody>
                             </table>
                         </div>
@@ -876,6 +113,68 @@
 
         $(document).ready(function () {
             $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"] });
+
         });
+
+        function ClosesaleOrder(id) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: !0,
+                customClass: {
+                    confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                    cancelButton: "btn btn-danger w-xs mt-2"
+                },
+                confirmButtonText: "Yes, delete it!",
+                buttonsStyling: !1,
+                showCloseButton: !0
+            }).then(function (t) {
+                ConfirmClosesaleOrder(id)
+            })
+        }
+
+        function ConfirmClosesaleOrder(docnum) {
+            debugger;
+            $.ajax({
+                type: 'GET',
+                url: '/Sales/ClosesaleOrder',
+                dataType: "json",
+
+                data: { docNum: docnum },
+                contentType: 'application/json',
+                success: function (response) {
+
+                    if (response.code == 100) {
+                        Swal.fire({
+                            title: "Success",
+                            text: response.message,
+                            icon: "success",
+                            showCancelButton: !0,
+                            customClass: {
+                                confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                                cancelButton: "btn btn-danger w-xs mt-2"
+                            },
+                            confirmButtonText: "Okay",
+                            buttonsStyling: !1,
+                            showCloseButton: !0
+                        }).then(function (t) {
+                            location.reload(true);
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            title: "Error",
+                            text: response.message,
+                            icon: "error",
+                        });
+                    }
+
+                }
+
+
+            });
+        }
+
     </script>
 }

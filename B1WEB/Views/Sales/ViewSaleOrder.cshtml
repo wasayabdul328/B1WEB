@@ -1,0 +1,538 @@
+﻿@{
+    ViewData["Title"] = "Create Sales Order";
+}
+
+@section CSS {
+
+}
+
+
+
+<div class="container-fluid">
+    <div class="row">
+
+
+        <div class="card">
+            <div class="card-body">
+                @*    Header Fields Section Starts here*@
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label for="CardCode" class="form-label">Customer</label>
+                            <div class="input-group input-group">
+                                <a class="input-group-text" ><i class="ri-file-list-fill"></i></a>
+                                <input disabled type="text" id="CardCode" value="@ViewBag.SingleSaleOrder.CardCode" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+
+                            <label for="CardName" class="form-label">Customer Name</label>
+                            <input value="@ViewBag.SingleSaleOrder.CardName" disabled class="form-control" id="CardName" />
+
+                            <label for="ContactPerson" class="form-label">Contact Person</label>
+                            @* <input value="@ViewBag.SingleSaleOrder.ContactPersonCode" disabled class="form-control" id="ContactPerson" /> *@
+                            <select id="ContactPerson" class="form-control">
+                            </select>
+                          
+
+                            <label for="CardName" class="form-label">Customer Ref No.</label>
+                            <input disabled class="form-control" value="@ViewBag.SingleSaleOrder.NumAtCard" id="CustomerRefNo" />
+
+                        </div>
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="CardCode" class="form-label">Series</label>
+                                    <select disabled class="form-control" id="Series">
+                                        @foreach (var item in ViewBag.Series.value)
+                                        {
+                                            if (ViewBag.SingleSaleOrder.Series == item.Series)
+                                            {
+                                                <option selected value="@item.Series">@item.SeriesName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Series">@item.SeriesName</option>
+                                            }
+                                        }
+
+                                    </select>
+                                   @*  <input disabled class="form-control" value="@ViewBag.SingleSaleOrder.Series" id="Series" /> *@
+                                   @*  <select class="form-control" id="Series">
+                                        <option>Primary</option>
+                                    </select> *@
+                                    
+
+                                </div>
+                                <div class="col-6">
+                                    <label for="DocNum" class="form-label">No.</label>
+                                    <input id="DocNum" value="@ViewBag.SingleSaleOrder.DocNum" disabled class="form-control" />
+
+                                </div>
+                            </div>
+
+                            <label for="Status" class="form-label">Status</label>
+                            <input disabled class="form-control" value="@ViewBag.SingleSaleOrder.DocumentStatus" id="Status" />
+
+
+                            <label for="PostingDate" class="form-label">Posting Date</label>
+                            <input type="date" disabled value="@ViewBag.SingleSaleOrder.DocDate.ToString("yyyy-MM-dd")" class="form-control" id="PostingDate" />
+
+
+                            <label for="DeliveryDate" class="form-label">Delivery Date</label>
+                            <input type="date" disabled value="@ViewBag.SingleSaleOrder.DocDueDate.ToString("yyyy-MM-dd")" class="form-control" id="DeliveryDate" />
+
+
+
+                            <label for="DocumentyDate" class="form-label">Document Date</label>
+                            <input type="date" disabled value="@ViewBag.SingleSaleOrder.DocDate.ToString("yyyy-MM-dd")" class="form-control" id="DocumentDate" />
+
+                        </div>
+
+                    </div>
+                </div>
+                @*  Header Fields Section Ends Here *@
+                <div class="col-12">
+                    <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#ContentsTab" role="tab" aria-selected="false">
+                                Contents
+                            </a>
+                        </li>
+                        @*   <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#ContentsTab" role="tab" aria-selected="false">
+                        Logistics
+                        </a>
+                        </li> *@
+                        @* <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#AccountingTab" role="tab" aria-selected="false">
+                                Accounting
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#RemarksTab" role="tab" aria-selected="false">
+                                Remarks
+                            </a>
+                        </li> *@
+                        @*  <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#ActivitiesTab" role="tab" aria-selected="false">
+                        Activities
+                        </a>
+                        </li> *@
+
+                    </ul>
+                    <div class="tab-content">
+
+                        <div class="tab-pane active" id="ContentsTab" role="tabpanel">
+                            <div class="row">
+                                <div class="col-2">
+                                 @*    <label for="ItmOrServ">Item/Service type</label>
+                                    @{
+                                        string type = "";
+                                        if (ViewBag.SingleSaleOrder.DocType == "dDocument_Items")
+                                        {
+                                            type = "Item";
+                                        }
+                                        else
+                                        {
+                                            type = "Service";
+                                        }
+                                    }
+                                    <input disabled class="form-control" value='@type' /> *@
+                                  
+                                </div>
+                                <div class="col-8"></div>
+                               
+                            </div>
+                           @*  @if (type=="Item")
+                            {
+                                *@ <div id="Itemtype" class="row mt-2">
+                                    <input type="number" hidden id="contentrowno" value="1" />
+
+                                    <div class="col-12">
+                                        <table class="table w-100" style="min-height:150px;overflow-y:scroll">
+                                            <thead class="tablegrid">
+                                                <tr>
+                                                    <th>
+                                                        Line #
+                                                    </th>
+                                                    <th>
+                                                        Item Code
+                                                    </th>
+                                                    <th>
+                                                        Item Description
+                                                    </th>
+                                                    <th>
+                                                        Quantity
+                                                    </th>
+                                                    <th>
+                                                        Unit Price
+                                                    </th>
+                                                    <th>
+                                                        Tax
+                                                    </th>
+                                                    <th>
+                                                        Discount %
+                                                    </th>
+                                                    <th>
+                                                        Total
+                                                    </th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tablegridtbody">
+                                                @{
+                                                    foreach (var lineitems in ViewBag.SingleSaleOrder.DocumentLines)
+                                                    {
+                                                            <tr>
+                                                                <td>
+                                                                    @lineitems.LineNum
+                                                                </td>
+                                                                <td>
+                                                                    @lineitems.ItemCode
+                                                                </td>
+                                                                <td>
+                                                                    @lineitems.ItemDescription
+                                                                </td>
+                                                                <td>
+                                                                    @lineitems.Quantity
+                                                                </td>
+                                                                <td>
+                                                                    @lineitems.Price
+                                                                </td>
+                                                                <td>
+                                                                    @lineitems.TaxTotal
+                                                                </td>
+                                                                <td>
+                                                                    @lineitems.DiscountPercent
+                                                                </td>
+                                                                <td>
+                                                                    @lineitems.LineTotal
+                                                                </td>
+
+                                                            </tr>
+                                                    }
+
+
+
+                                                }
+
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+
+
+
+                                </div>
+                         @*    } *@
+
+                       @*      else{
+
+                                <div class="row mt-2" id="Servicetype">
+                                    <input type="number" hidden id="contentrowno1" value="1" />
+
+                                    <div class="col-12">
+                                        <table class="table w-100" style="min-height:150px;overflow-y:scroll">
+                                            <thead class="tablegrid">
+                                                <tr>
+                                                    <th>
+                                                        Sr #
+                                                    </th>
+                                                    <th>
+                                                        Description
+                                                    </th>
+                                                    <th>
+                                                        G/L Account
+                                                    </th>
+                                                    <th>
+                                                        G/L Account Name
+                                                    </th>
+                                                    <th>
+                                                        Tax
+                                                    </th>
+                                                    <th>
+                                                        Total
+                                                    </th>
+                                                    <th>
+                                                        Delete
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tablegridtbody1">
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+
+
+
+                                </div>
+                            } *@
+
+                        </div>
+
+
+                       @*  <div class="tab-pane" id="LogisticsTab" role="tabpanel">
+                        </div> *@
+
+
+                     @*    <div class="tab-pane" id="RemarksTab" role="tabpanel">
+
+                            <div class="col-6">
+                                <label for="remarkst" class="form-label">Remarks</label>
+                                <textarea type="text" class="form-control" id="remakst"></textarea>
+                            </div>
+                        </div> *@
+
+                        @* <div class="tab-pane" id="AccountingTab" role="tabpanel">
+                            <partial name="~/Views/PartialLayouts/SaleOrder/_saleorderaccountingtab.cshtml"   />
+                        </div> *@
+
+
+                    </div>
+
+
+
+
+                </div>
+
+                <div class="col-12 mt-5">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label for="SalesEmployee" class="form-label">Sales Employee</label>
+                            @* <input class="form-control" value="@ViewBag.SingleSaleOrder.SalesPersonCode" disabled id="SalesEmployee" /> *@
+                            <select disabled class="form-control" id="SalesEmployee">
+
+                                @foreach (var item in ViewBag.SalesPersons.value)
+                                {
+                                    if (item.SlpCode == ViewBag.SingleSaleOrder.SalesPersonCode)
+                                    {
+                                        <option selected value="@item.SlpCode">@item.SlpName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.SlpCode">@item.SlpName</option>
+                                    }
+                                    
+                                }
+
+                            </select>
+                           @*  <select class="form-control" id="SalesEmployee">
+                            </select> *@
+
+                            @* <label for="Owner" class="form-label">Owner</label>
+                            <select class="form-control" id="Owner">
+                            </select> *@
+
+                            <label for="Comment" class="form-label">Comment</label>
+                            <textarea value="@ViewBag.SingleSaleOrder.Comments" disabled rows="3" class="form-control"></textarea>
+
+                        </div>
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-5">
+                            <div class="row">
+                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <label for="TotalBeforeDiscount" class="form-label">Total Before Discount</label>
+                                    @{
+                                        var totalbeforediscount = ViewBag.SingleSaleOrder.DocTotal + ViewBag.SingleSaleOrder.TotalDiscount - ViewBag.SingleSaleOrder.VatSum;
+                                    }
+                                    <input value="@totalbeforediscount" type="number" disabled class="form-control" id="TotalBeforeDiscount" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="DiscountPercent" class="form-label">Discount Percent</label>
+                                    <input disabled value="@ViewBag.SingleSaleOrder.DiscountPercent" type="number" class="form-control" id="DiscountPercent" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="DiscountAmount" class="form-label">Discount Amount</label>
+                                    <input disabled value="@ViewBag.SingleSaleOrder.TotalDiscount" type="number" class="form-control" id="DiscountAmount" />
+                                </div>
+                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <label for="TotalBeforeDiscount" class="form-label">Tax</label>
+                                    <input disabled value="@ViewBag.SingleSaleOrder.VatSum" type="number" disabled class="form-control" id="Tax" />
+                                </div>
+                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <label for="TotalBeforeDiscount" class="form-label">Total</label>
+                                    <input disabled value="@ViewBag.SingleSaleOrder.DocTotal" type="number" disabled class="form-control" id="Total" />
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-12 mt-4 mb-4">
+                    <a style="float:right" class="btn btn-primary btn-sm">Submit</a>
+                    <a style="float:right" class="btn btn-danger btn-sm">Cancel</a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+@* <div class="modal fade flip" id="CustomerlistModal" tabindex="-1" aria-labelledby="CustomerListModalLabel" aria-modal="true">
+ *@<div class="modal modal-xl" id="CustomerlistModal" tabindex="-1" aria-labelledby="CustomerListModalLabel" aria-modal="true">
+    <div class="modal-dialog zoomIn">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CustomerListModalLabel">Select Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table id="fixed-header" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                    <thead class="tablegrid">
+                        <tr>
+
+                            <th>Sr #</th>
+                            <th>Customer Code</th>
+                            <th>Customer Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                1
+                            </td>
+                            <td>
+                                100001
+                            </td>
+                            <td>
+                                Abdul rehman
+                            </td>
+
+                            <td>
+                                <button class="btn btn-sm btn-secondary">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                2
+                            </td>
+                            <td>
+                                100002
+                            </td>
+                            <td>
+                                Abdul wasay
+                            </td>
+
+
+                            <td>
+
+                                <button class="btn btn-sm btn-secondary">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+                <div class="col-lg-12">
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div><!--end col-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Script {
+
+    <script>
+
+        $(document).ready(function () {
+            GetContactPersonAgainstCustomer("@ViewBag.SingleSaleOrder.CardCode")
+        });
+
+
+
+        function AddContentRow() {
+            var type = $("#ItmOrServ").val();
+            if (type == "item") {
+                var rowno = parseInt($("#contentrowno").val());
+                var tr = "<tr id='contentrowno_" + rowno + "' ><td>" + rowno + "</td>" +
+                    "<td><div class='input-group input-group'> <span class='input-group-text'><i class='ri-file-list-fill'></i></span> <input type='text' class='form-control' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
+                    "<td> <input disabled class='form-control description'/> </td> <td> <input type='number'  class='form-control quantity'/> </td><td> <input type='number'  class='form-control unitprice'/> </td><td> <input type='number'  class='form-control taxcode'/> </td> <td>  <input type='number'  class='form-control discount'/></td><td> <input type='number'  class='form-control total'/></td><td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
+                $("#tablegridtbody").append(tr);
+                rowno = rowno + 1;
+                $("#contentrowno").val(rowno)
+            }
+            else {
+                var rowno = parseInt($("#contentrowno1").val());
+                var tr = "<tr id='contentrowno1_" + rowno + "' ><td>" + rowno + "</td> <td><input class='form-control description type='text'/></td>" +
+                    "<td><div class='input-group input-group'> <span class='input-group-text'><i class='ri-file-list-fill'></i></span> <input type='text' class='form-control' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
+                    "<td> <input disabled class='form-control description'/> </td> <td> <input type='text'  class='form-control taxcode'/> </td></td><td> <input type='number'  class='form-control total'/></td><td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
+                $("#tablegridtbody1").append(tr);
+                rowno = rowno + 1;
+                $("#contentrowno1").val(rowno)
+            }
+        }
+        function DeleteRow(rowno) {
+            var type = $("#ItmOrServ").val();
+            if (type == "item") {
+                $("#contentrowno_" + rowno).remove();
+            }
+            else {
+                $("#contentrowno1_" + rowno).remove();
+            }
+
+        }
+
+        $("#ItmOrServ").change(function () {
+            var type = $(this).val();
+            if (type == "item") {
+                $("#Itemtype").removeClass("hide");
+                $("#Servicetype").addClass("hide");
+            }
+            else {
+                $("#Servicetype").removeClass("hide");
+                $("#Itemtype").addClass("hide");
+            }
+        });
+
+        function GetContactPersonAgainstCustomer(cardCode) {
+            debugger;
+            $.ajax({
+                type: 'GET',
+                url: '/Sales/GetContactPersonAgainstCustomer',
+                dataType: "json",
+
+                data: { cardCode: cardCode },
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                    $("#ContactPerson").empty();
+                    $.each(response, function (index, item) {
+                        if (item.cntctCode == "@ViewBag.SingleSaleOrder.ContactPersonCode") {
+                            $("#ContactPerson").append("<option selected value='" + item.cntctCode + "'>" + item.name + "</option>")
+                        }
+                        else{
+                            $("#ContactPerson").append("<option value='" + item.cntctCode + "'>" + item.name + "</option>")
+                        }
+                       
+
+                    });
+
+                }
+
+
+            });
+        }
+
+    </script>
+}

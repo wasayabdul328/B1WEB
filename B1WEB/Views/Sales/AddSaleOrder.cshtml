@@ -23,18 +23,16 @@
                             <label for="CardCode" class="form-label">Customer</label>
                             <div class="input-group input-group">
                                 <a class="input-group-text" data-bs-toggle="modal" data-bs-target="#CustomerlistModal"><i class="ri-file-list-fill"></i></a>
-                                <input type="text" id="CardCode" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                <input disabled type="text" id="CardCode" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                             </div>
 
                             <label for="CardName" class="form-label">Customer Name</label>
-                            <input class="form-control" id="CardName" />
+                            <input disabled class="form-control" id="CardName" />
 
                             <label for="ContactPerson" class="form-label">Contact Person</label>
                            
                             <select id="ContactPerson" class="form-control">
-                                    <option value="Admin">Admin</option>
-                                    <option value="Alex">Alex</option>
-                                    <option value="Senthil">Senthil</option>
+                             
                                 </select>
 
                             <label for="CardName" class="form-label">Customer Ref No.</label>
@@ -47,7 +45,11 @@
                                 <div class="col-6">
                                     <label for="CardCode" class="form-label">Series</label>
                                     <select class="form-control" id="Series">
-                                        <option>Primary</option>
+                                        @foreach (var item in ViewBag.Series.value)
+                                        {
+                                            <option value="@item.Series">@item.SeriesName</option>
+                                        }
+                                      
                                     </select>
 
                                 </div>
@@ -91,7 +93,7 @@
                                 Logistics
                             </a>
                         </li> *@
-                        <li class="nav-item">
+                       @*  <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#AccountingTab" role="tab" aria-selected="false">
                                 Accounting
                             </a>
@@ -100,7 +102,7 @@
                             <a class="nav-link" data-bs-toggle="tab" href="#RemarksTab" role="tab" aria-selected="false">
                                 Remarks
                             </a>
-                        </li>
+                        </li> *@
                        @*  <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#ActivitiesTab" role="tab" aria-selected="false">
                                 Activities
@@ -144,14 +146,20 @@
                         <div class="col-lg-3">
                             <label for="SalesEmployee" class="form-label">Sales Employee</label>
                             <select class="form-control" id="SalesEmployee">
+                                
+                                @foreach (var item in ViewBag.SalesPersons.value)
+                                {
+                                    <option value="@item.SlpCode">@item.SlpName</option>
+                                }
+
                             </select>
 
-                            <label for="Owner" class="form-label">Owner</label>
+                          @*   <label for="Owner" class="form-label">Owner</label>
                             <select class="form-control" id="Owner">
-                            </select>
+                            </select> *@
 
                             <label for="Comment" class="form-label">Comment</label>
-                            <textarea rows="3" class="form-control"></textarea>
+                            <textarea rows="3" id="Comment" class="form-control"></textarea>
 
                         </div>
                         <div class="col-lg-4"></div>
@@ -164,17 +172,17 @@
                                 </div>
                                 <div class="col-6">
                                     <label for="DiscountPercent" class="form-label">Discount Percent</label>
-                                    <input type="number" class="form-control" id="DiscountPercent" />
+                                    <input type="number"  class="form-control" id="DiscountPercent" />
                                 </div>
                                 <div class="col-6">
                                     <label for="DiscountAmount" class="form-label">Discount Amount</label>
-                                    <input type="number" class="form-control" id="DiscountAmount" />
+                                    <input type="number" disabled class="form-control" id="DiscountAmount" />
                                 </div>
-                                <div class="col-6"></div>
+                              @*   <div class="col-6"></div>
                                 <div class="col-6">
                                     <label for="TotalBeforeDiscount" class="form-label">Tax</label>
                                     <input type="number" disabled class="form-control" id="Tax" />
-                                </div>
+                                </div> *@
                                 <div class="col-6"></div>
                                 <div class="col-6">
                                     <label for="TotalBeforeDiscount" class="form-label">Total</label>
@@ -189,7 +197,7 @@
                 </div>
 
                 <div class="col-12 mt-4 mb-4">
-                    <a style="float:right" class="btn btn-primary btn-sm">Submit</a>
+                    <a style="float:right" class="btn btn-primary btn-sm" onclick="PostSaleOrder()">Submit</a>
                     <a style="float:right" class="btn btn-danger btn-sm">Cancel</a>
                 </div>
            </div>
@@ -200,7 +208,8 @@
 </div>
 
 @* <div class="modal fade flip" id="CustomerlistModal" tabindex="-1" aria-labelledby="CustomerListModalLabel" aria-modal="true">
- *@<div class="modal modal-xl" id="CustomerlistModal" tabindex="-1" aria-labelledby="CustomerListModalLabel" aria-modal="true">
+ *@
+ <div class="modal modal-xl" id="CustomerlistModal" tabindex="-1" aria-labelledby="CustomerListModalLabel" aria-modal="true">
     <div class="modal-dialog zoomIn">
         <div class="modal-content">
             <div class="modal-header">
@@ -208,7 +217,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table id="fixed-header" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                <table id="fixed-Customer" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                     <thead class="tablegrid">
                         <tr>
 
@@ -219,42 +228,33 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                100001
-                            </td>
-                            <td>
-                                Abdul rehman
-                            </td>
-                            
-                            <td>
-                                <button class="btn btn-sm btn-secondary">Select
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                100002
-                            </td>
-                            <td>
-                                Abdul wasay
-                            </td>
-                            
-                            
-                            <td>
+                        @{
+                            int bpcount = 1;
+                        }
 
-                                <button class="btn btn-sm btn-secondary">
-                                    Select
-                                </button>
-                            </td>
-                        </tr>
-                        
+                        @foreach (var value in ViewBag.BusinessPartners.value)
+                        {
+                            
+                            <tr>
+                                <td>
+                                    @bpcount
+                                </td>
+                                <td>
+                                    @value.CardCode
+                                </td>
+                                <td>
+                                    @value.CardName
+                                </td>
+
+                                <td>
+                                    <button onclick="SelectCustomer('@value.CardCode','@value.CardName')" class="btn btn-sm btn-secondary">
+                                        Select
+                                    </button>
+                                </td>
+                            </tr>
+                            bpcount = bpcount + 1;
+                        }
+                       
 
                     </tbody>
                 </table>
@@ -270,37 +270,120 @@
     </div>
 </div>
 
-
+<input id="tempitemrow" value="0" hidden  />
 @section Script {
-  
+    <script src="~/cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="~/cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
     <script>
 
         $(document).ready(function () {
-
+            debugger;
+            $("#fixed-Customer").DataTable();
+            $("#fixed-Items").DataTable();
         });
 
+        function PostSaleOrder(){
+            var sorder = new Object();
+            var SaleOrderArr = new Array();
 
 
+            sorder.CardCode = $("#CardCode").val();
+            sorder.DocDueDate = $("#DocumentDate").val();
+            sorder.DocDate = $("#PostingDate").val();
+            sorder.TaxDate = $("#DeliveryDate").val();
+            sorder.SalesPersonCode = $("#SalesEmployee").val();
+            sorder.Comments = $("#Comment").val();
+            sorder.NumAtCard = $("#CustomerRefNo").val();
+            sorder.DiscountPercent = $("#DiscountPercent").val();
+
+            $("#tablegridtbody tr").each(function () {
+                var row = $(this);
+                var Lineitems = new Object();
+
+
+                Lineitems.ItemCode = row.find('.code').val();
+                Lineitems.Quantity = row.find('.quantity').val();
+                Lineitems.TaxCode = "";
+                Lineitems.UnitPrice = row.find('.unitprice').val();
+                Lineitems.DiscountPercent = row.find('.discount').val();
+
+                SaleOrderArr.push(Lineitems);
+            });
+
+            sorder.DocumentLines = SaleOrderArr;
+            var ModelData = JSON.stringify(sorder)
+            $.ajax({
+                type: 'Post',
+                url: '/Sales/PostsaleOrder',
+                dataType: "json",
+
+                data: ModelData,
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                    if(response.code==100){
+                        Swal.fire({
+                            title: "Success",
+                            text: response.message,
+                            icon: "success",
+                            showCancelButton: !0,
+                            customClass: {
+                                confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                                cancelButton: "btn btn-danger w-xs mt-2"
+                            },
+                            confirmButtonText: "Okay",
+                            buttonsStyling: !1,
+                            showCloseButton: !0
+                        }).then(function (t) {
+                            location.reload(true);
+                        })
+                    }
+                   else{
+                        Swal.fire({
+                            title: "Error",
+                            text: response.message,
+                            icon: "error",
+                        });
+                    }
+                   
+                }
+
+
+            });
+
+        }
+
+
+
+
+    
         function AddContentRow() {
-            var type = $("#ItmOrServ").val();
-            if (type == "item") {
+            debugger;
+            // var type = $("#ItmOrServ").val();
+            // if (type == "item") {
                 var rowno = parseInt($("#contentrowno").val());
-                var tr = "<tr id='contentrowno_" + rowno + "' ><td>" + rowno + "</td>" +
-                    "<td><div class='input-group input-group'> <span class='input-group-text'><i class='ri-file-list-fill'></i></span> <input type='text' class='form-control' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
-                    "<td> <input disabled class='form-control description'/> </td> <td> <input type='number'  class='form-control quantity'/> </td><td> <input type='number'  class='form-control unitprice'/> </td><td> <input type='number'  class='form-control taxcode'/> </td> <td>  <input type='number'  class='form-control discount'/></td><td> <input type='number'  class='form-control total'/></td><td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
+                var tr = "<tr id='contentrowno_" + rowno + "'><td>" + rowno + "</td>" +
+                    "<td><div class='input-group input-group'><a class='input-group-text' onclick='OpenItemModal(" + rowno + ")'><i class='ri-file-list-fill'></i></a><input id='code" + rowno + "' type='text' disabled class='form-control code' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
+                    "<td><input id='description" + rowno + "' disabled class='form-control description'/></td><td><input type='number' class='form-control quantity'/></td><td><input type='number' class='form-control unitprice'/></td><td><input type='number' class='form-control discount'/></td><td><input disabled type='number' class='form-control total'/></td><td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
                 $("#tablegridtbody").append(tr);
                 rowno = rowno + 1;
-                $("#contentrowno").val(rowno)
-            }
-            else{
-                var rowno = parseInt($("#contentrowno1").val());
-                var tr = "<tr id='contentrowno1_" + rowno + "' ><td>" + rowno + "</td> <td><input class='form-control description type='text'/></td>" +
-                    "<td><div class='input-group input-group'> <span class='input-group-text'><i class='ri-file-list-fill'></i></span> <input type='text' class='form-control' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
-                    "<td> <input disabled class='form-control description'/> </td> <td> <input type='text'  class='form-control taxcode'/> </td></td><td> <input type='number'  class='form-control total'/></td><td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
-                $("#tablegridtbody1").append(tr);
-                rowno = rowno + 1;
-                $("#contentrowno1").val(rowno)
-            }
+                $("#contentrowno").val(rowno);
+            // }
+        
+
+            // else{
+            //     var rowno = parseInt($("#contentrowno1").val());
+            //     var tr = "<tr id='contentrowno1_" + rowno + "' ><td>" + rowno + "</td> <td><input class='form-control description type='text'/></td>" +
+            //         "<td><div class='input-group input-group'> <span class='input-group-text'><i class='ri-file-list-fill'></i></span> <input type='text' class='form-control' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
+            //         "<td> <input disabled class='form-control description'/> </td> <td> <input type='text'  class='form-control taxcode'/> </td></td><td> <input type='number'  class='form-control total'/></td><td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
+            //     $("#tablegridtbody1").append(tr);
+            //     rowno = rowno + 1;
+            //     $("#contentrowno1").val(rowno)
+            // }
         }
         function DeleteRow(rowno) {
           var type=  $("#ItmOrServ").val();
@@ -324,6 +407,108 @@
                 $("#Itemtype").addClass("hide");
             }
         });
+        function OpenItemModal(rownum){
+            $("#tempitemrow").val(rownum);
+            $("#ItemslistModal").modal("show");
+
+        }
+        function SelectCustomer(cardCode,cardName){
+            debugger;
+            $("#CardCode").val(cardCode);
+            $("#CardName").val(cardName);
+            $("#CustomerlistModal").modal("hide");
+            GetContactPersonAgainstCustomer(cardCode)
+        }
+        function SelectItem(itemcode,itemname){
+            debugger;
+           var rownum= $("#tempitemrow").val();
+            $("#code" + rownum).val(itemcode);
+            $("#description" + rownum).val(itemname);
+            $("#ItemslistModal").modal("hide");
+        }
+     
+      function  GetContactPersonAgainstCustomer(cardCode){
+          debugger;
+            $.ajax({
+                type: 'GET',
+                url: '/Sales/GetContactPersonAgainstCustomer',
+                dataType: "json",
+
+                data: { cardCode: cardCode },
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                    $("#ContactPerson").empty();
+                    $.each(response, function (index, item) {
+                        $("#ContactPerson").append("<option value='" + item.cntctCode + "'>" + item.name + "</option>")
+
+                    });
+                  
+                    }
+
+           
+          });
+      }
+
+        $('body').on('change', '.quantity', Calculatetotals);
+        $('body').on('change', '.unitprice', Calculatetotals);
+        $('body').on('change', '.discount', Calculatetotals);
+        $('body').on('change', '#DiscountPercent', CalculateFootertotals);
+
+
+
+        function Calculatetotals() {
+            $that = $(this);
+            debugger;
+            var quantity = $that.closest("tr").find(".quantity").val() == "" ? 0 : parseFloat($that.closest("tr").find(".quantity").val());
+            var unitprice = $that.closest("tr").find(".unitprice").val() == "" ? 0 : parseFloat($that.closest("tr").find(".unitprice").val());
+            var discount = $that.closest("tr").find(".discount").val() == "" ? 0 : parseFloat($that.closest("tr").find(".discount").val());
+            if (discount > 100) {
+                $that.closest("tr").find(".discount").val(100);
+                discount = 100;
+            }
+            var linetotal = (quantity * unitprice) ;
+            var discounttotal = (discount / 100) *linetotal;
+            var originaltotal = linetotal - discounttotal;
+            $that.closest("tr").find(".total").val(originaltotal);
+            var totaltotal = 0;
+            $("#tablegridtbody tr").each(function () {
+
+                $row = $(this);
+                totaltotal = totaltotal + parseFloat($row.closest("tr").find(".total").val() == "" ? 0 : $row.closest("tr").find(".total").val());
+            
+            
+            });
+            $("#TotalBeforeDiscount").val(totaltotal);
+            var totaldiscountper = $("#DiscountPercent").val() == "" ? 0 : parseFloat($("#DiscountPercent").val());
+
+            if (totaldiscountper > 100) {
+                totaldiscountper = 100;
+            }
+            var totaldiscountamount = (totaldiscountper / 100) * totaltotal;
+            var totalafterdiscount = totaltotal - totaldiscountamount;
+            debugger;
+
+            $("#DiscountAmount").val(totaldiscountamount.toFixed(2));
+            $("#Total").val(totalafterdiscount.toFixed(2));
+
+
+
+
+        }
+
+
+        function CalculateFootertotals(){
+            var discountpercentage = $("#DiscountPercent").val();
+            if (discountpercentage>100){
+                discountpercentage = 100;
+            }
+            var TotalBeforeDiscount= $("#TotalBeforeDiscount").val();
+            var discountamount = (discountpercentage / 100) * TotalBeforeDiscount;
+            $("#DiscountAmount").val(discountamount.toFixed(2));
+            $("#Total").val((TotalBeforeDiscount - discountamount).toFixed(2));
+
+        }
 
     </script>
 }
