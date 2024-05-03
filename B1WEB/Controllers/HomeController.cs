@@ -1,9 +1,11 @@
+using B1WEB.ActionFilters;
 using B1WEB.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace B1WEB.Controllers
 {
+    [SessionAuthorizationFilter]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

@@ -3,21 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace B1WEB.ActionFilters
 {
-    public class SessionAuthorizationFilter : IActionFilter
+    public class SessionAuthorizationFilter : ActionFilterAttribute
     {
-        public void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            // Check if session exists
-            if (context.HttpContext.Session.GetString("UserId") == null)
+            var ctx = filterContext.HttpContext;
+            if (ctx.Session.GetString("SessionID") == null)
             {
-                // Redirect to login page or perform any other action
-                context.Result = new RedirectToActionResult("Login", "Account", null);
+                filterContext.Result = new RedirectResult("~/Account/Login");
+                return;
             }
-        }
-
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-            // Implement if needed
+            base.OnActionExecuting(filterContext);
         }
     }
 }

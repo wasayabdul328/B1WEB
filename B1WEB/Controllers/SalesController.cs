@@ -9,11 +9,13 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using B1WEB.Common;
+using B1WEB.ActionFilters;
 
 namespace B1WEB.Controllers
 {
     public class SalesController : Controller
     {
+        [SessionAuthorizationFilter]
         public IActionResult SalesOrder()
         {
             var salesorder = GetSalesOrders();
