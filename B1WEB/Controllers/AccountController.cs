@@ -277,6 +277,7 @@ namespace B1WEB.Controllers
             HttpContext.Session.Remove("CompanyID");
             HttpContext.Session.Remove("CompanyName");
             HttpContext.Session.Remove("SessionID");
+            HttpContext.Session.Remove("logintype");
 
 
 

@@ -256,22 +256,28 @@
                                 <i class="ri-honour-line"></i> <span data-key="t-widgets">Dashboard</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarAdministrator" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAdministrator">
-                                <i class="ri-admin-fill"></i> <span data-key="t-layouts">Administrator</span>
-                            </a>
-                            <div class="collapse menu-dropdown" id="sidebarAdministrator">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="/Administrator/manageUser" class="nav-link">Manage Users</a>
-                                    </li>   
-                                    <li class="nav-item">
-                                        <a href="/Administrator/CompanyConfiguration" class="nav-link">Manage Company Configuration</a>
-                                    </li>
+                        @{
+                            if (Context.Session.GetString("logintype") == "0")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" href="#sidebarAdministrator" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAdministrator">
+                                        <i class="ri-admin-fill"></i> <span data-key="t-layouts">Administrator</span>
+                                    </a>
+                                    <div class="collapse menu-dropdown" id="sidebarAdministrator">
+                                        <ul class="nav nav-sm flex-column">
+                                            <li class="nav-item">
+                                                <a href="/Administrator/manageUser" class="nav-link">Manage Users</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/Administrator/CompanyConfiguration" class="nav-link">Manage Company Configuration</a>
+                                            </li>
 
-                                </ul>
-                            </div>
-                        </li> <!-- end Administrator Menu -->
+                                        </ul>
+                                    </div>
+                                </li> <!-- end Administrator Menu -->
+                            }
+                        }
+                       
                         
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarSales" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSales">
