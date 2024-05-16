@@ -1,9 +1,11 @@
-﻿using B1WEB.AppModels;
+﻿using B1WEB.ActionFilters;
+using B1WEB.AppModels;
 using B1WEB.DBContext;
 using Microsoft.AspNetCore.Mvc;
 
 namespace B1WEB.Controllers
 {
+    [SessionAuthorizationFilter]
     public class AdministratorController : Controller
     {
         private readonly MyAppContext _context;

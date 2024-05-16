@@ -47,6 +47,7 @@
                                     <th>Servic eLayer URL</th>
                                     <th>Service Layer Username</th>
                                     <th>Service Layer Password</th>
+                                    <th>Default Company</th>
                                     <th>Action</th>
                                 
                                 </tr>
@@ -111,6 +112,12 @@
                             <div>
                                 <label for="ServiceLayerPassword" class="form-label">Service Layer Password</label>
                                 <input type="text" class="form-control" id="ServiceLayerPassword" placeholder="Enter Service Layer Password">
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-lg-6">
+                            <div>
+                                <label for="DefaultCompany" class="form-label">Assign Company to All Users</label>
+                                <input  style="" type="checkbox" name="DefaultCompany" id="DefaultCompany" />
                             </div>
                         </div><!--end col-->
 
@@ -234,6 +241,7 @@
             user.ServiceLayerURL = $("#ServiceLayerURL").val();
             user.ServiceLayerUsername = $("#ServiceLayerUsername").val();
             user.ServiceLayerPassword = $("#ServiceLayerPassword").val();
+            user.DefaultCompany = $('#DefaultCompany').prop('checked');
             user.IsActive = true;
 
 
@@ -308,6 +316,7 @@
                                     '<td>' + list.serviceLayerURL + '</td>' +
                                     '<td>' + list.serviceLayerUsername + '</td>' +
                                     '<td>' + list.serviceLayerPassword + '</td>' +
+                                    '<td>' + list.defaultCompany + '</td>' +
                                     '<td><a onclick="EditUser(' + list.id + ')" class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a><a onclick="DeleteUser(' + list.id + ')" class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a></td>' +
                                     '</tr>';
                                 $("#fixed-headertbody").append(row);
@@ -363,6 +372,12 @@
                         $("#ServiceLayerURL").val(data.serviceLayerURL);
                         $("#ServiceLayerUsername").val(data.serviceLayerUsername);
                         $("#ServiceLayerPassword").val(data.serviceLayerPassword);
+                        if (data.defaultCompany==true) {
+                            $('#DefaultCompany').prop('checked',true);
+                        }
+                        else{
+                            $('#DefaultCompany').prop('checked', false);
+                        }
                         $("#submit").text("Update");
                         $("#AddUserModalLabel").text("Company Configuration Details");
                     }
@@ -409,6 +424,8 @@
             $("#ServiceLayerURL").val("");
             $("#ServiceLayerUsername").val("");
             $("#ServiceLayerPassword").val("");
+
+            $('#DefaultCompany').prop('checked', false);
             $("#submit").text("Submit");
             $("#AddUserModalLabel").text("Create Company Configuration");
         }

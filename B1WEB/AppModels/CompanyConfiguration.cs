@@ -19,6 +19,8 @@ namespace B1WEB.AppModels
 
         public string ServiceLayerPassword { get; set; }
 
+        public bool DefaultCompany { get; set; } = false;
+
         public bool IsActive { get; set; } = true;
 
         public DateTime CreatedOn { get; set; }

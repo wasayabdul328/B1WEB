@@ -99,8 +99,9 @@ namespace B1WEB.Controllers
         public IActionResult UserCompany()
         {
             var userId = Convert.ToInt64(HttpContext.Session.GetString("ID"));
-
+            var logintype = HttpContext.Session.GetString("logintype");
             var UserCompanies=_context.UserCompany.Where(x=>x.PortalUsersId== userId ).ToList();
+
 
          List<CompanyConfiguration> Companies = new List<CompanyConfiguration>();
 
@@ -113,6 +114,7 @@ namespace B1WEB.Controllers
                 Companies.Add(companyConfiguration);
             }
             ViewBag.CompanyConfiguration = Companies;
+            ViewBag.LoginType = logintype;
         
 
             return View();
@@ -122,19 +124,97 @@ namespace B1WEB.Controllers
 
             try
             {
-                var userexist = _context.PortalUsers.Where(x => x.UserName == model.username && x.Password == model.password).FirstOrDefault();
-                if (userexist == null)
+                if (model.logintype == "0")
                 {
-                    TempData["ErrorMessage"] = "Incorrect username or password.";
-                    return RedirectToAction("Login");
+                    var userexist = _context.PortalUsers.Where(x => x.UserName == model.username && x.Password == model.password).FirstOrDefault();
+                    if (userexist == null)
+                    {
+                        TempData["ErrorMessage"] = "Incorrect username or password.";
+                        return RedirectToAction("Login");
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("logintype", Convert.ToString(model.logintype));
+                        HttpContext.Session.SetString("ID", Convert.ToString(userexist.ID));
+                        HttpContext.Session.SetString("UserName", userexist.UserName);
+                        HttpContext.Session.SetString("image", userexist.Image);
+                        return RedirectToAction("UserCompany");
+                    }
                 }
                 else
                 {
-                    HttpContext.Session.SetString("ID", Convert.ToString(userexist.ID));
-                    HttpContext.Session.SetString("UserName", userexist.UserName);
-                    HttpContext.Session.SetString("image", userexist.Image);
-                    return RedirectToAction("UserCompany");
+                    var companyy = _context.CompanyConfiguration.Where(x=>x.DefaultCompany==true).FirstOrDefault();
+
+                    string ConfiguredAPIUrl = companyy.ServiceLayerURL;
+                    string apiUrl = ConfiguredAPIUrl + "/b1s/v1/Login";
+
+                    LoginRequestModel RequestModel = new LoginRequestModel();
+                    RequestModel.CompanyDB = companyy.DatabaseName;
+                    RequestModel.UserName = companyy.ServiceLayerUsername;
+                    RequestModel.Password = companyy.ServiceLayerPassword;
+
+
+                    string jsonRequestBody = JsonConvert.SerializeObject(RequestModel);
+
+                    // Make the request
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "POST";
+                    httpWebRequest.KeepAlive = true;
+                    httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                    httpWebRequest.ServicePoint.Expect100Continue = false;
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        streamWriter.Write(jsonRequestBody);
+                    }
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+
+                        var responseInstance = JsonConvert.DeserializeObject<LoginResponse>(result);
+                        HttpContext.Session.SetString("ServiceLayerURL", Convert.ToString(ConfiguredAPIUrl));
+                        HttpContext.Session.SetString("SessionID", Convert.ToString(responseInstance.SessionId));
+                        SaveCustomerLoginQuery();
+
+                        bool customerFound = GetCustomerLogin(model.username, model.password);
+                        if (customerFound == true)
+                        {
+                            HttpContext.Session.SetString("logintype", Convert.ToString(model.logintype));
+                            HttpContext.Session.SetString("ID", Convert.ToString(model.username));
+                           
+                            HttpContext.Session.SetString("CompanyID", Convert.ToString(companyy.ID));
+                            HttpContext.Session.SetString("CompanyName", Convert.ToString(companyy.DatabaseName));
+                            //HttpContext.Session.SetString("image", companyy.CompanyLogo);
+                            SaveSaleOrderCustomerQuery();
+                            SaveBusinessPartnerCustomerQuery();
+                            SaveItemsQuery();
+                            SaveContactPersonQuery();
+                            SaveSeriesQuery();
+                            SaveSapSalesPersons();
+                            SaveQueryForImagePath();
+                            SaveSaleReturnCustomerQuery();
+                            SaveSaleInvoiceCustomerQuery();
+                            SaveInventoryItemsQuery();
+                            GetImagePath();
+
+
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            TempData["ErrorMessage"] = "Incorrect CardCode Or Password.";
+                            return RedirectToAction("Login");
+                        }
+
+
+                        
+                    }
+
                 }
+
+
             }
             catch (Exception ex)
             {
@@ -144,6 +224,49 @@ namespace B1WEB.Controllers
             }
        
         }
+        public bool GetCustomerLogin(string cardCode,string password)
+        {
+            QueryResponseForContactPersonDTO saleOrderResponseDTO = new QueryResponseForContactPersonDTO();
+            var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+            var SessionID = HttpContext.Session.GetString("SessionID");
+            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('SaveCustomerLoginQuery')/List?cardcode='" + cardCode + "'&password='" + password + "'";
+
+            // Make the request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.KeepAlive = true;
+            httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            httpWebRequest.ServicePoint.Expect100Continue = false;
+            httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+            //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            //{
+            //    streamWriter.Write(jsonRequestBody);
+            //}
+
+            // Get the response or handle the error if any
+            using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    var responseInstance = JsonConvert.DeserializeObject<QueryResponseForContactPersonDTO>(result);
+                    if (responseInstance.value.Count > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                   
+                    // Process the response as needed
+                }
+            }
+            return false;
+        }
+
 
         public IActionResult SignOut()
         {
@@ -153,6 +276,7 @@ namespace B1WEB.Controllers
             HttpContext.Session.Remove("image");
             HttpContext.Session.Remove("CompanyID");
             HttpContext.Session.Remove("CompanyName");
+            HttpContext.Session.Remove("SessionID");
 
 
 
@@ -223,6 +347,71 @@ namespace B1WEB.Controllers
                 }
             }
         }
+        public void SaveSaleOrderCustomerQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get All Sales Order Against Customer";
+                createQuery.SqlText = "select  DocNum,DocEntry,CardCode,CardName,DocDate,DocDueDate,DocStatus ,DocTotal from ORDR Where DocStatus='O' and CardCode=:cardcode";
+                createQuery.SqlCode = "GetSalesOrderCustomer";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
         public void SaveSaleReturnQuery()
         {
             try
@@ -234,6 +423,71 @@ namespace B1WEB.Controllers
                 createQuery.SqlName = "Get All Sales Return";
                 createQuery.SqlText = "select  DocNum,DocEntry,CardCode,CardName,DocDate,DocDueDate,DocStatus ,DocTotal from ORDN Where DocStatus='O'";
                 createQuery.SqlCode = "GetSalesReturn";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        } 
+        public void SaveSaleReturnCustomerQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get All Sales Return Customer";
+                createQuery.SqlText = "select  DocNum,DocEntry,CardCode,CardName,DocDate,DocDueDate,DocStatus ,DocTotal from ORDN Where DocStatus='O' and CardCode=:cardcode";
+                createQuery.SqlCode = "GetSalesReturnCustomer";
 
                 string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
 
@@ -354,6 +608,72 @@ namespace B1WEB.Controllers
             }
         }
 
+              public void SaveSaleInvoiceCustomerQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get All Sales Invoices Customer";
+                createQuery.SqlText = "select  DocNum,DocEntry,CardCode,CardName,DocDate,DocDueDate,DocStatus ,DocTotal from OINV Where DocStatus='O' and CardCode=:cardcode";
+                createQuery.SqlCode = "GetSalesInvoicesCustomer";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+
         public void SaveBusinessPartnerQuery()
         {
             try
@@ -365,6 +685,136 @@ namespace B1WEB.Controllers
                 createQuery.SqlName = "Get All Business Partner";
                 createQuery.SqlText = "select CardCode,CardName from OCRD where CardType='C'";
                 createQuery.SqlCode = "GetBusinessPartner";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+        public void SaveBusinessPartnerCustomerQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get All Business Partner Customer";
+                createQuery.SqlText = "select CardCode,CardName from OCRD where CardType='C' and CardCode=:cardcode";
+                createQuery.SqlCode = "GetBusinessPartnerCustomer";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+        public void SaveCustomerLoginQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get Customer Login";
+                createQuery.SqlText = "select CardCode,U_Password  from OCRD a where a.CardCode= :cardcode and a.U_Password =:password";
+                createQuery.SqlCode = "SaveCustomerLoginQuery";
 
                 string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
 

@@ -64,10 +64,20 @@ namespace B1WEB.Controllers
         }
         public QueryResponseDTO GetSalesOrders()
         {
+            String apiUrl = "";
             QueryResponseDTO saleOrderResponseDTO = new QueryResponseDTO();
+            var logintype = HttpContext.Session.GetString("logintype");
+            var cardCode = HttpContext.Session.GetString("ID");
             var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
             var SessionID = HttpContext.Session.GetString("SessionID");
-            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetSalesOrder')/List";
+            if (logintype == "0")
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetSalesOrder')/List";
+            }
+            else
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetSalesOrderCustomer')/List?cardcode='"+ cardCode+"'";
+            }
             
             // Make the request
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
@@ -98,11 +108,21 @@ namespace B1WEB.Controllers
         }
          public QueryResponseDTO GetSalesReturn()
         {
+            string apiUrl = "";
             QueryResponseDTO saleOrderResponseDTO = new QueryResponseDTO();
+            var logintype = HttpContext.Session.GetString("logintype");
+            var cardCode = HttpContext.Session.GetString("ID");
             var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
             var SessionID = HttpContext.Session.GetString("SessionID");
-            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetSalesReturn')/List";
-            
+      
+            if (logintype == "0")
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetSalesReturn')/List";
+            }
+            else
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetSalesReturnCustomer')/List?cardcode='" + cardCode + "'";
+            }
             // Make the request
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
             httpWebRequest.ContentType = "application/json";
@@ -132,11 +152,20 @@ namespace B1WEB.Controllers
         }
          public QueryResponseDTO GetSalesInvoice()
         {
+            string apiUrl = "";
+            var logintype = HttpContext.Session.GetString("logintype");
+            var cardCode = HttpContext.Session.GetString("ID");
             QueryResponseDTO saleOrderResponseDTO = new QueryResponseDTO();
             var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
             var SessionID = HttpContext.Session.GetString("SessionID");
-            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetSalesInvoices')/List";
-            
+            if (logintype == "0")
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetSalesInvoices')/List";
+            }
+            else
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetSalesInvoicesCustomer')/List?cardcode='" + cardCode + "'";
+            }
             // Make the request
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
             httpWebRequest.ContentType = "application/json";
@@ -492,10 +521,23 @@ namespace B1WEB.Controllers
         
         public QueryResponseDTO GetBusinessPartners()
         {
+            string apiUrl = "";
+            var logintype = HttpContext.Session.GetString("logintype");
+            var cardCode = HttpContext.Session.GetString("ID");
             QueryResponseDTO saleOrderResponseDTO = new QueryResponseDTO();
             var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
             var SessionID = HttpContext.Session.GetString("SessionID");
-            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetBusinessPartner')/List";
+
+            if (logintype == "0")
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetBusinessPartner')/List";
+            }
+            else
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetBusinessPartnerCustomer')/List?cardcode='" + cardCode + "'";
+            }
+
+           
 
             // Make the request
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);

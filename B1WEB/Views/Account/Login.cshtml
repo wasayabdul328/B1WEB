@@ -64,7 +64,7 @@
                                     <form action="/Account/LoginToPortal" method="post">
 
                                         <div class="mb-3">
-                                            <label for="username" class="form-label">Username</label>
+                                            <label for="username" class="form-label">Username / CardCode </label>
                                             <input name="username" type="text" class="form-control" id="username" placeholder="Enter username">
                                         </div>
 
@@ -74,6 +74,20 @@
                                             <div class="position-relative auth-pass-inputgroup mb-3">
                                                 <input type="password" name="password" class="form-control pe-5 password-input" placeholder="Enter password" id="password-input">
                                                 <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon material-shadow-none" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                           
+                                            <label class="form-label" for="password-input">Login As A</label>
+                                            <div class="position-relative auth-pass-inputgroup mb-3">
+                                                <select name="logintype" class="form-control" id="logintype">
+                                                   <option value="0">
+                                                        User
+                                                   </option>
+                                                    <option value="1">
+                                                        Customer
+                                                   </option>
+                                               </select>
                                             </div>
                                         </div>
                                           <div class="mb-3">

@@ -85,7 +85,18 @@ namespace B1WEB.Controllers.Api
                         Message = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))
                     });
                 }
-            
+                if (model.DefaultCompany == true)
+                {
+                    // Set DefaultCompany to false for all existing records
+                    var defaultCompanies = _context.CompanyConfiguration.Where(c => c.DefaultCompany).ToList();
+                    foreach (var company in defaultCompanies)
+                    {
+                        company.DefaultCompany = false;
+                        _context.CompanyConfiguration.Update(company);
+                    }
+                    _context.SaveChanges();
+                }
+
                 model.CreatedOn = DateTime.Now;
                 model.UpdatedOn = DateTime.Now;
                 model.IsActive = model.IsActive;
@@ -123,6 +134,18 @@ namespace B1WEB.Controllers.Api
                         Message = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))
                     });
                 }
+                if (model.DefaultCompany == true)
+                {
+                    // Set DefaultCompany to false for all existing records
+                    var defaultCompanies = _context.CompanyConfiguration.Where(c => c.DefaultCompany).ToList();
+                    foreach (var company in defaultCompanies)
+                    {
+                        company.DefaultCompany = false;
+                        _context.CompanyConfiguration.Update(company);
+                    }
+                    _context.SaveChanges();
+                }
+
 
                 var data = _context.CompanyConfiguration.Find(model.ID);
 
@@ -136,6 +159,7 @@ namespace B1WEB.Controllers.Api
                     data.ServiceLayerURL = model.ServiceLayerURL;
                     data.ServiceLayerUsername = model.ServiceLayerUsername;
                     data.ServiceLayerPassword = model.ServiceLayerPassword;
+                    data.DefaultCompany = model.DefaultCompany;
                    
 
                     _context.Update(data);
