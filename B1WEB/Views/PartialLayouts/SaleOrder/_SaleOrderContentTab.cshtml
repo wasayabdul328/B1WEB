@@ -30,18 +30,24 @@
                     <th>
                         Quantity
                     </th>
-                    <th>
-                        Unit Price
-                    </th>
-                  @*   <th>
-                        Tax
+                    @{
+                        if (Context.Session.GetString("logintype") == "0")
+                        {
+                            <th>
+                                Unit Price
+                            </th>
+                            @*   <th>
+                    Tax
                     </th> *@
-                    <th>
-                        Discount %
-                    </th>
-                    <th>
-                        Total
-                    </th>  
+                            <th>
+                                Discount %
+                            </th>
+                            <th>
+                                Total
+                            </th>
+                        }
+                    }
+                   
                     <th>
                         Delete
                     </th>

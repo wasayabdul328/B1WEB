@@ -163,35 +163,41 @@
 
                         </div>
                         <div class="col-lg-4"></div>
-                        <div class="col-lg-5">
-                            <div class="row">
-                                <div class="col-6"></div>
+                        @{
+                            if (Context.Session.GetString("logintype") == "0")
+                            {
+                                    <div class="col-lg-5">
+                                        <div class="row">
+                                            <div class="col-6"></div>
+                                            <div class="col-6">
+                                                <label for="TotalBeforeDiscount" class="form-label">Total Before Discount</label>
+                                                <input type="number" disabled class="form-control" id="TotalBeforeDiscount" />
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="DiscountPercent" class="form-label">Discount Percent</label>
+                                                <input type="number" class="form-control" id="DiscountPercent" />
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="DiscountAmount" class="form-label">Discount Amount</label>
+                                                <input type="number" disabled class="form-control" id="DiscountAmount" />
+                                            </div>
+                                            @*   <div class="col-6"></div>
                                 <div class="col-6">
-                                    <label for="TotalBeforeDiscount" class="form-label">Total Before Discount</label>
-                                    <input type="number" disabled class="form-control" id="TotalBeforeDiscount" />
-                                </div>
-                                <div class="col-6">
-                                    <label for="DiscountPercent" class="form-label">Discount Percent</label>
-                                    <input type="number"  class="form-control" id="DiscountPercent" />
-                                </div>
-                                <div class="col-6">
-                                    <label for="DiscountAmount" class="form-label">Discount Amount</label>
-                                    <input type="number" disabled class="form-control" id="DiscountAmount" />
-                                </div>
-                              @*   <div class="col-6"></div>
-                                <div class="col-6">
-                                    <label for="TotalBeforeDiscount" class="form-label">Tax</label>
-                                    <input type="number" disabled class="form-control" id="Tax" />
+                                <label for="TotalBeforeDiscount" class="form-label">Tax</label>
+                                <input type="number" disabled class="form-control" id="Tax" />
                                 </div> *@
-                                <div class="col-6"></div>
-                                <div class="col-6">
-                                    <label for="TotalBeforeDiscount" class="form-label">Total</label>
-                                    <input type="number" disabled class="form-control" id="Total" />
-                                </div>
-                            </div>
+                                            <div class="col-6"></div>
+                                            <div class="col-6">
+                                                <label for="TotalBeforeDiscount" class="form-label">Total</label>
+                                                <input type="number" disabled class="form-control" id="Total" />
+                                            </div>
+                                        </div>
 
 
-                        </div>
+                                    </div>
+                            }
+                        }
+                     
 
                     </div>
                 </div>
@@ -271,6 +277,7 @@
 </div>
 
 <input id="tempitemrow" value="0" hidden  />
+<input id="logintype" value='@Context.Session.GetString("logintype")' hidden   />
 @section Script {
     <script src="~/cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="~/cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
@@ -363,12 +370,18 @@
     
         function AddContentRow() {
             debugger;
-            // var type = $("#ItmOrServ").val();
-            // if (type == "item") {
+            var customerrow = "";
+            var logintype = $("#logintype").val();
+            if(logintype=="0"){
+                customerrow = "<td><input type='number' class='form-control unitprice'/></td><td><input type='number' class='form-control discount'/></td><td><input disabled type='number' class='form-control total'/></td>"
+            }
+          
                 var rowno = parseInt($("#contentrowno").val());
                 var tr = "<tr id='contentrowno_" + rowno + "'><td>" + rowno + "</td>" +
                     "<td><div class='input-group input-group'><a class='input-group-text' onclick='OpenItemModal(" + rowno + ")'><i class='ri-file-list-fill'></i></a><input id='code" + rowno + "' type='text' disabled class='form-control code' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
-                    "<td><input id='description" + rowno + "' disabled class='form-control description'/></td><td><input type='number' class='form-control quantity'/></td><td><input type='number' class='form-control unitprice'/></td><td><input type='number' class='form-control discount'/></td><td><input disabled type='number' class='form-control total'/></td><td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
+                    "<td><input id='description" + rowno + "' disabled class='form-control description'/></td><td><input type='number' class='form-control quantity'/></td>"+
+                customerrow+
+                    "<td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
                 $("#tablegridtbody").append(tr);
                 rowno = rowno + 1;
                 $("#contentrowno").val(rowno);
