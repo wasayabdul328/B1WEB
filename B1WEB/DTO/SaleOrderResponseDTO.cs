@@ -30,6 +30,12 @@ namespace B1WEB.DTO
         public string BitmapPath { get; set; }
        
     }
+    
+    public class Pricelistprice
+    {
+        public string Price { get; set; }
+       
+    }
 
 
     public class QueryResponseForContactPersonDTO
@@ -42,7 +48,34 @@ namespace B1WEB.DTO
         [JsonProperty("odata.nextLink")]
         public string odatanextLink { get; set; }
     }
+    public class QueryResponseForPrice
+    {
+        [JsonProperty("odata.metadata")]
+        public string odatametadata { get; set; }
+        public string SqlText { get; set; }
+        public List<Pricelistprice> value { get; set; }
 
+        [JsonProperty("odata.nextLink")]
+        public string odatanextLink { get; set; }
+    }
+    public class QueryResponseForLoginDTO
+    {
+        [JsonProperty("odata.metadata")]
+        public string odatametadata { get; set; }
+        public string SqlText { get; set; }
+        public List<loginCustomer> value { get; set; }
+
+        [JsonProperty("odata.nextLink")]
+        public string odatanextLink { get; set; }
+    }
+
+    public class loginCustomer
+    {
+        public string CardCode { get; set; }
+        public string CardName { get; set; }
+        public string ListNum { get; set; }
+        public string U_Password { get; set; }
+    }
     public class contactperson
     {
         public string CntctCode { get; set; }

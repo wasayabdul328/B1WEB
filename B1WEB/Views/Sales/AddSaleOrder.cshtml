@@ -166,35 +166,35 @@
                         @{
                             if (Context.Session.GetString("logintype") == "0")
                             {
-                                    <div class="col-lg-5">
-                                        <div class="row">
-                                            <div class="col-6"></div>
-                                            <div class="col-6">
-                                                <label for="TotalBeforeDiscount" class="form-label">Total Before Discount</label>
-                                                <input type="number" disabled class="form-control" id="TotalBeforeDiscount" />
-                                            </div>
-                                            <div class="col-6">
-                                                <label for="DiscountPercent" class="form-label">Discount Percent</label>
-                                                <input type="number" class="form-control" id="DiscountPercent" />
-                                            </div>
-                                            <div class="col-6">
-                                                <label for="DiscountAmount" class="form-label">Discount Amount</label>
-                                                <input type="number" disabled class="form-control" id="DiscountAmount" />
-                                            </div>
-                                            @*   <div class="col-6"></div>
+                                                <div class="col-lg-5">
+                                                    <div class="row">
+                                                        <div class="col-6"></div>
+                                                        <div class="col-6">
+                                                            <label for="TotalBeforeDiscount" class="form-label">Total Before Discount</label>
+                                                            <input type="number" disabled class="form-control" id="TotalBeforeDiscount" />
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="DiscountPercent" class="form-label">Discount Percent</label>
+                                                            <input type="number" class="form-control" id="DiscountPercent" />
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="DiscountAmount" class="form-label">Discount Amount</label>
+                                                            <input type="number" disabled class="form-control" id="DiscountAmount" />
+                                                        </div>
+                                                        @*   <div class="col-6"></div>
                                 <div class="col-6">
                                 <label for="TotalBeforeDiscount" class="form-label">Tax</label>
                                 <input type="number" disabled class="form-control" id="Tax" />
                                 </div> *@
-                                            <div class="col-6"></div>
-                                            <div class="col-6">
-                                                <label for="TotalBeforeDiscount" class="form-label">Total</label>
-                                                <input type="number" disabled class="form-control" id="Total" />
-                                            </div>
-                                        </div>
+                                                        <div class="col-6"></div>
+                                                        <div class="col-6">
+                                                            <label for="TotalBeforeDiscount" class="form-label">Total</label>
+                                                            <input type="number" disabled class="form-control" id="Total" />
+                                                        </div>
+                                                    </div>
 
 
-                                    </div>
+                                                </div>
                             }
                         }
                      
@@ -275,9 +275,76 @@
         </div>
     </div>
 </div>
+<div class="modal modal-xl" id="TaxCodesModal" tabindex="-1" aria-labelledby="TaxCodesModalLabel" aria-modal="true">
+    <div class="modal-dialog zoomIn">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TaxCodesModalLabel">Select Tax Codes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table id="fixed-Customer" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                    <thead class="tablegrid">
+                        <tr>
+
+                            <th>Sr #</th>
+                            <th> Code</th>
+                            <th> Name</th>
+                            <th> Rate (%)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int taxcount = 1;
+                        }
+
+                        @foreach (var value in ViewBag.TaxCodes.value)
+                        {
+                            
+                            <tr>
+                                <td>
+                                    @taxcount
+                                </td>
+                                <td>
+                                    @value.Code
+                                </td>
+                                <td>
+                                    @value.Name
+                                </td>
+                                <td>
+                                    @value.Rate
+                                </td>
+
+                                <td>
+                                    <button onclick="SelectTaxCode('@value.Code')" class="btn btn-sm btn-secondary">
+                                        Select
+                                    </button>
+                                </td>
+                            </tr>
+                            taxcount = taxcount + 1;
+                        }
+                       
+
+                    </tbody>
+                </table>
+
+                <div class="col-lg-12">
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div><!--end col-->
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <input id="tempitemrow" value="0" hidden  />
 <input id="logintype" value='@Context.Session.GetString("logintype")' hidden   />
+<input id="pricelist" value='@Context.Session.GetString("PriceList")' hidden />
+<input id="cardCode" value='@Context.Session.GetString("ID")' hidden />
+<input id="cardName" value='@Context.Session.GetString("cardName")' hidden />
 @section Script {
     <script src="~/cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="~/cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
@@ -291,6 +358,12 @@
             debugger;
             $("#fixed-Customer").DataTable();
             $("#fixed-Items").DataTable();
+            var logintype = $("#logintype").val();
+            var cardCode = $("#cardCode").val();
+            var cardName = $("#cardName").val();
+            if (logintype == "1") {
+                SelectCustomer(cardCode, cardName)
+            }
         });
 
         function PostSaleOrder(){
@@ -317,6 +390,7 @@
                 Lineitems.TaxCode = "";
                 Lineitems.UnitPrice = row.find('.unitprice').val();
                 Lineitems.DiscountPercent = row.find('.discount').val();
+                Lineitems.TaxCode = row.find('.taxcode').val();
 
                 SaleOrderArr.push(Lineitems);
             });
@@ -372,14 +446,18 @@
             debugger;
             var customerrow = "";
             var logintype = $("#logintype").val();
-            if(logintype=="0"){
-                customerrow = "<td><input type='number' class='form-control unitprice'/></td><td><input type='number' class='form-control discount'/></td><td><input disabled type='number' class='form-control total'/></td>"
+            
+            if(logintype!="0"){
+                var disbalewhecustomer ="disabled"
             }
           
                 var rowno = parseInt($("#contentrowno").val());
-                var tr = "<tr id='contentrowno_" + rowno + "'><td>" + rowno + "</td>" +
+            customerrow = "<td><input " + disbalewhecustomer + " id='unitprice_" + rowno + "' type='number' class='form-control unitprice'/></td><td><input " + disbalewhecustomer + "  type='number' class='form-control discount'/></td><td><input disabled type='number' class='form-control total'/></td>"
+
+            var tr = "<tr id='contentrowno_" + rowno + "'><td>" + rowno + "</td>" +
                     "<td><div class='input-group input-group'><a class='input-group-text' onclick='OpenItemModal(" + rowno + ")'><i class='ri-file-list-fill'></i></a><input id='code" + rowno + "' type='text' disabled class='form-control code' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
                     "<td><input id='description" + rowno + "' disabled class='form-control description'/></td><td><input type='number' class='form-control quantity'/></td>"+
+                "<td><div class='input-group input-group'><a class='input-group-text' onclick='OpenTaxCodeModal(" + rowno + ")'><i class='ri-file-list-fill'></i></a><input id='taxcode" + rowno + "' type='text' disabled class='form-control taxcode' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
                 customerrow+
                     "<td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
                 $("#tablegridtbody").append(tr);
@@ -399,13 +477,13 @@
             // }
         }
         function DeleteRow(rowno) {
-          var type=  $("#ItmOrServ").val();
-            if (type == "item") {
+          // var type=  $("#ItmOrServ").val();
+          //   if (type == "item") {
                 $("#contentrowno_" + rowno).remove();
-            }
-            else {
-                $("#contentrowno1_" + rowno).remove();
-            }
+            // }
+            // else {
+            //     $("#contentrowno1_" + rowno).remove();
+            // }
            
         }
 
@@ -425,6 +503,11 @@
             $("#ItemslistModal").modal("show");
 
         }
+        function OpenTaxCodeModal(rownum) {
+            $("#tempitemrow").val(rownum);
+            $("#TaxCodesModal").modal("show");
+
+        }
         function SelectCustomer(cardCode,cardName){
             debugger;
             $("#CardCode").val(cardCode);
@@ -438,6 +521,15 @@
             $("#code" + rownum).val(itemcode);
             $("#description" + rownum).val(itemname);
             $("#ItemslistModal").modal("hide");
+            var pricelist = $("#pricelist").val();
+            GetPriceOfItem(itemcode, pricelist, rownum)
+        }
+
+        function SelectTaxCode(taxcode) {
+            debugger;
+           var rownum= $("#tempitemrow").val();
+            $("#taxcode" + rownum).val(taxcode);
+            $("#TaxCodesModal").modal("hide");
         }
      
       function  GetContactPersonAgainstCustomer(cardCode){
@@ -459,6 +551,24 @@
                   
                     }
 
+           
+          });
+      }
+
+        function GetPriceOfItem(itemcode,pricelist,rownum) {
+          debugger;
+            $.ajax({
+                type: 'GET',
+                url: '/Sales/GetPriceOfItem',
+                dataType: "json",
+
+                data: { itemcode: itemcode, pricelist: pricelist },
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                    var price = response.value[0].price;
+                    $("#unitprice_" + rownum).val(price);
+                }
            
           });
       }

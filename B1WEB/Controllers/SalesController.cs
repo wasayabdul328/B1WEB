@@ -29,6 +29,7 @@ namespace B1WEB.Controllers
             ViewBag.Items = GetSapItems();
             ViewBag.Series = GetSapSereies();
             ViewBag.SalesPersons = GetSapSalesPersons();
+            ViewBag.TaxCodes = GetTaxCodes();
            // ViewBag.GetImagePath = GetImagePath();
 
             return View();
@@ -87,6 +88,7 @@ namespace B1WEB.Controllers
             httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
             httpWebRequest.ServicePoint.Expect100Continue = false;
             httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+            httpWebRequest.Headers.Add("Prefer", $"odata.maxpagesize=100000");
 
             //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             //{
@@ -219,6 +221,42 @@ namespace B1WEB.Controllers
 
                  
                     return Json(responseInstance.value);
+                    // Process the response as needed
+                }
+            }
+            return Json(null);
+        }
+        public JsonResult GetPriceOfItem(string itemcode,string pricelist)
+        {
+            QueryResponseForContactPersonDTO saleOrderResponseDTO = new QueryResponseForContactPersonDTO();
+            var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+            var SessionID = HttpContext.Session.GetString("SessionID");
+            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetPriceOfItems')/List?itemcode='" + itemcode + "'&pricelist='"+ pricelist + "'";
+
+            // Make the request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.KeepAlive = true;
+            httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            httpWebRequest.ServicePoint.Expect100Continue = false;
+            httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+            //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            //{
+            //    streamWriter.Write(jsonRequestBody);
+            //}
+
+            // Get the response or handle the error if any
+            using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    var responseInstance = JsonConvert.DeserializeObject<QueryResponseForPrice>(result);
+
+                 
+                    return Json(responseInstance);
                     // Process the response as needed
                 }
             }
@@ -447,6 +485,41 @@ namespace B1WEB.Controllers
             return saleOrderResponseDTO;
         }
 
+        public QueryResponseDTO GetTaxCodes()
+        {
+            QueryResponseDTO saleOrderResponseDTO = new QueryResponseDTO();
+            var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+            var SessionID = HttpContext.Session.GetString("SessionID");
+            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetTaxCodes')/List";
+
+            // Make the request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.KeepAlive = true;
+            httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            httpWebRequest.ServicePoint.Expect100Continue = false;
+            httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+            //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            //{
+            //    streamWriter.Write(jsonRequestBody);
+            //}
+
+            // Get the response or handle the error if any
+            using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    var responseInstance = JsonConvert.DeserializeObject<QueryResponseDTO>(result);
+                    return responseInstance;
+                    // Process the response as needed
+                }
+            }
+            return saleOrderResponseDTO;
+        }
+        
         public QueryResponseDTO GetSapSereies()
         {
             QueryResponseDTO saleOrderResponseDTO = new QueryResponseDTO();

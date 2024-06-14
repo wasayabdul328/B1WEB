@@ -29,10 +29,13 @@
                     </th>
                     <th>
                         Quantity
+                    </th>  
+                    <th>
+                        Tax Code
                     </th>
-                    @{
+                    @* @{
                         if (Context.Session.GetString("logintype") == "0")
-                        {
+                        { *@
                             <th>
                                 Unit Price
                             </th>
@@ -45,8 +48,8 @@
                             <th>
                                 Total
                             </th>
-                        }
-                    }
+                      @*   } *@
+                   @*  } *@
                    
                     <th>
                         Delete
