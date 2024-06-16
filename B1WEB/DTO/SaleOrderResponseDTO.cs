@@ -105,5 +105,32 @@ namespace B1WEB.DTO
     }
 
 
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    public class BPAddress
+    {
+        public int RowNum { get; set; }
+        public string AddressType { get; set; }
+        public string AddressName { get; set; }
+        public string Street { get; set; }
+        public string Block { get; set; }
+        public string City { get; set; }
+    }
+
+    public class BP
+    {
+        public string CardCode { get; set; }
+        public string CardType { get; set; }
+        public string CardName { get; set; }
+        public string CardForeignName { get; set; }
+        public string GroupCode { get; set; }
+        public string Phone1 { get; set; }
+        public string Phone2 { get; set; }
+        public string EmailAddress { get; set; }
+        public string PriceListNum { get; set; }
+        public string Cellular { get; set; }
+        public string U_Password { get; set; }
+        public List<BPAddress> BPAddresses { get; set; }
+    }
+
 
 }

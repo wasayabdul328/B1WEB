@@ -81,6 +81,8 @@ namespace B1WEB.Controllers
                     SaveTaxCodesQuery();
                     SaveContactPersonQuery();
                     SaveSeriesQuery();
+                    SavePriceListQuery();
+                    SaveCustomerGroupQuery();
                     SaveSapSalesPersons();
                     SaveQueryForImagePath();
                     SaveSaleReturnQuery();
@@ -196,6 +198,8 @@ namespace B1WEB.Controllers
                             SaveTaxCodesQuery();
                             SaveContactPersonQuery();
                             SaveSeriesQuery();
+                            SavePriceListQuery();
+                            SaveCustomerGroupQuery();
                             SaveSapSalesPersons();
                             SaveQueryForImagePath();
                             SaveSaleReturnCustomerQuery();
@@ -1073,6 +1077,138 @@ namespace B1WEB.Controllers
                 }
             }
         }
+        public void SavePriceListQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get Price Lists";
+                createQuery.SqlText = "SELECT T0.ListNum, T0.ListName FROM OPLN T0";
+                createQuery.SqlCode = "GetPriceLists";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+
+        public void SaveCustomerGroupQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get Customer Group Series";
+                createQuery.SqlText = "select GroupCode,GroupName from OCRG";
+                createQuery.SqlCode = "GetCustomerGroupSeries";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+
         public void SaveSapSalesPersons()
         {
             try

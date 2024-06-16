@@ -1,0 +1,479 @@
+﻿@{
+    ViewData["Title"] = "Customer List";
+}
+
+@section CSS {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+}
+
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <h5 style="font-size:32px" class="card-title mb-0 flex-grow-1">Customer List</h5>
+                            <div class="flex-shrink-0">
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <a onclick="CreateCustomer()" id="CreateCustomerBtn" class="btn btn-danger"><i class="ri-add-line align-bottom me-1"></i> Add Business Partner</a>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                
+                    </div>
+                    <div class="card-body">
+                        <table id="fixed-header" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                            <thead class="tablegrid">
+                                <tr>
+
+                                    <th>Sr #</th>
+                                    <th>Customer Code</th>
+                                    <th>Customer Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int bpcount = 1;
+                                }
+
+                                @foreach (var value in ViewBag.BusinessPartners.value)
+                                {
+
+                                    <tr>
+                                        <td>
+                                            @bpcount
+                                        </td>
+                                        <td>
+                                            @value.CardCode
+                                        </td>
+                                        <td>
+                                            @value.CardName
+                                        </td>
+
+                                        <td>
+                                            <button onclick="SelectCustomer('@value.CardCode','@value.CardName')" class="btn btn-sm btn-secondary">
+                                                Select
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    bpcount = bpcount + 1;
+                                }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div><!--end row-->
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal modal-xl" id="CreateCustomerModal" tabindex="-1" aria-labelledby="CustomerlistModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CreateCustomerModalLabel">Customer Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              
+              <div class="row">
+                    <div class="col-4">
+                        <label for="CardCode" class="form-label">Customer Code</label>
+                        <input   class="form-control" id="CardCode" />
+                    </div>
+                    <div class="col-4">
+                        <label for="CardName" class="form-label">Customer Name</label>
+                        <input  class="form-control" id="CardName" />
+                    </div>
+
+                    <div class="col-4">
+                        <label for="CardFName" class="form-label">Foreign Name</label>
+                        <input  class="form-control" id="CardFName" />
+                    </div>
+                    <div class="col-4">
+                        <label for="GroupCode" class="form-label">Group</label>
+                        <select class="form-control" id="GroupCode">
+                            @foreach (var item in ViewBag.CustomerGroup.value)
+                            {
+                                <option value="@item.GroupCode">@item.GroupName</option>
+                            }
+
+                        </select>
+                    </div>
+                    <hr style="margin-top:10px"/>
+                    <div class="col-4">
+                        <label for="Tell1" class="form-label">Tell 1</label>
+                        <input class="form-control" id="Tell1" />
+                    </div>  
+                    <div class="col-4">
+                        <label for="Tell2" class="form-label">Tell 2</label>
+                        <input class="form-control" id="Tell2" />
+                    </div> 
+                    <div class="col-4">
+                        <label for="MobilePhone" class="form-label">Mobile Phone</label>
+                        <input class="form-control" id="MobilePhone" />
+                    </div>
+                    <div class="col-4">
+                        <label for="Email" class="form-label">Email</label>
+                        <input class="form-control" id="Email" />
+                    </div>
+                    <div class="col-4">
+                        <label for="Password" class="form-label">Password</label>
+                        <input class="form-control" id="Password" />
+                    </div>
+                    <hr style="margin-top:10px" />
+
+                    <div class="col-4">
+                        <label for="PriceList" class="form-label">PriceList</label>
+                        <select class="form-control" id="PriceList">
+                            @foreach (var item in ViewBag.PriceList.value)
+                            {
+                                <option value="@item.ListNum">@item.ListName</option>
+                            }
+
+                        </select>
+                    </div>
+                    </div>
+               
+                 @*   <div class="row">
+                    <div class="col-2">
+                    </div>
+                    <div class="col-8"></div>
+                    <div class="col-2">
+                        <a class="btn btn-primary btn-sm" style="float:right" onclick="AddAdress()">Add Adress</a>
+                    </div>
+                   </div>
+                   <div class="row">
+                    <div class="col-12">
+                        <table class="table w-100" style="min-height:150px;overflow-y:scroll">
+
+                            <thead class="tablegrid">
+                                <tr>
+
+                                    <th>SR #</th>
+                                    <th>Adress Type</th>
+                                    <th>Adress Name</th>
+                                    <th>Street</th>
+                                    <th>Block</th>
+                                    <th>City</th>
+                                  
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="BPAddresses">
+                            </tbody>
+                        </table>
+                    </div>
+                   </div>
+                  
+ *@
+                
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="createbtn" onclick="submitRequest()" class="btn btn-primary">Submit</button>
+                <button type="button" id="updatebtn" onclick="updateRequest()" class="btn btn-primary">Update</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <!-- Additional buttons or footer content can be added here -->
+            </div>
+        </div>
+    </div>
+</div>
+<input hidden type="number" id="adressrowno" value="1" />
+<input id="logintype" value='@Context.Session.GetString("logintype")' hidden />
+@section Script {
+    <!--datatable js-->
+
+
+    <script src="~/cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="~/cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="~/cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    @*     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+ *@
+
+    <script>
+
+        $(document).ready(function () {
+            $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"] });
+            $("#updatebtn").addClass("hide");
+            $("#createbtn").removeClass("hide");
+            var logintype = $("#logintype").val();
+            debugger;
+            if (logintype == "1") {
+
+                $("#CreateCustomerBtn").addClass("hide");
+                $("#CardCode").prop("disabled",true);
+
+                $("#CardName").prop("disabled", true);
+                $("#CardFName").prop("disabled", true);
+                $("#GroupCode").prop("disabled", true);
+                $("#Tell1").prop("disabled", true);
+                $("#Tell2").prop("disabled", true);
+                $("#MobilePhone").prop("disabled", true);
+                // $("#Email").attr("disabled");
+                // $("#Password").attr("disabled");
+                $("#PriceList").prop("disabled", true);
+            }
+
+        });
+
+        function CreateCustomer(){
+            $("#CardCode").val("");
+            $("#updatebtn").addClass("hide");
+            $("#createbtn").removeClass("hide");
+            $("#CardName").val("");
+            $("#CardFName").val("");
+            $("#GroupCode").val("");
+            $("#Tell1").val("");
+            $("#Tell2").val("");
+            $("#MobilePhone").val("");
+            $("#Email").val("");
+            $("#Password").val("");
+            $("#PriceList").val("");
+            $("#adressrowno").val(1);
+            // $("#BPAddresses").empty();
+            $("#CreateCustomerModal").modal("show");
+        }
+
+        function SelectCustomer(cardCode,cardName) {
+            $("#updatebtn").removeClass("hide");
+            $("#createbtn").addClass("hide");
+            $("#CreateCustomerModal").modal("show");
+            GetCustomerDetails(cardCode)
+        }
+
+        function AddAdress(){
+            debugger;
+            var rowno = parseInt($("#adressrowno").val());
+           
+            var tr = "<tr id='contentrowno_" + rowno + "'>"+
+                "<td><input  value='" + rowno + "' disabled class='form-control'/></td>" +
+                "<td><select class='form-control AddressType' ><option value='bo_BillTo'> Bill TO</option><option value='bo_ShipTo'> Ship TO</option></select></td>" +
+                "<td><input  class='form-control AddressName'/></td>" +
+                "<td><input  class='form-control Street'/></td>" +
+                "<td><input  class='form-control Block'/></td>" +
+                "<td><input  class='form-control City'/></td>" +
+                // "<td><input  class='form-control Country'/></td>" +
+                "<td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
+            $("#BPAddresses").append(tr);
+            rowno = rowno + 1;
+            $("#adressrowno").val(rowno);
+        }
+        function DeleteRow(rowno) {
+            $("#contentrowno_" + rowno).remove();
+        }
+
+        
+        function GetCustomerDetails(cardCode) {
+            $.ajax({
+                type: 'GET',
+                url: '/Customer/GetCustomerDetails',
+                dataType: "json",
+
+                data: { cardCode: cardCode },
+                contentType: 'application/json',
+                success: function (response) {
+                  
+                    $("#CardCode").val(response.CardCode);
+                    $("#CardName").val(response.CardName);
+                    $("#CardFName").val(response.CardForeignName);
+                    $("#GroupCode").val(response.GroupCode);
+                    $("#Tell1").val(response.Phone1);
+                    $("#Tell2").val(response.Phone2);
+                    $("#MobilePhone").val(response.Cellular);
+                    $("#Email").val(response.EmailAddress);
+                    $("#Password").val(response.U_Password);
+                    $("#PriceList").val(response.PriceListNum);
+
+                    $("#BPAddresses").empty();
+                    var sr = 1;
+                    $.each(response.BPAddresses, function (index, item) {
+                        var rowno = parseInt($("#adressrowno").val());
+
+                        var tr = "<tr id='contentrowno_" + sr + "'>" +
+                            "<td><input  value='" + sr + "' disabled class='form-control'/><input  value='" + item.RowNum + "' hidden class='form-control rownum'/></td>" +
+                            "<td><select id='AddressType_"+sr+"' class='form-control AddressType' ><option value='bo_BillTo'> Bill TO</option><option value='bo_ShipTo'> Ship TO</option></select></td>" +
+                            "<td><input value='" + item.AddressName + "'  class='form-control AddressName'/></td>" +
+                            "<td><input  value='" + item.Street + "'  class='form-control Street'/></td>" +
+                            "<td><input value='" + item.Block + "'  class='form-control Block'/></td>" +
+                            "<td><input  value='" + item.City + "'  class='form-control City'/></td>" +
+                            // "<td><input  class='form-control Country'/></td>" +
+                            "<td><i onclick='DeleteRow(" + sr + ")' class='ri-delete-bin-5-line'></i></td></tr>";
+                        $("#BPAddresses").append(tr);
+                        $("#AddressType_" + sr).val(item.AddressType);
+                        sr++;
+                    });
+                }
+            });
+        }
+        function submitRequest(){
+            var BP = new Object();
+            // var BPAddresses = new Array();
+
+
+            BP.CardType = "cCustomer";
+            BP.CardCode = $("#CardCode").val();
+            BP.CardName = $("#CardName").val();
+            BP.CardForeignName = $("#CardFName").val();
+            BP.GroupCode = $("#GroupCode").val();
+            BP.Phone1 = $("#Tell1").val();
+            BP.Phone2 = $("#Tell2").val();
+            BP.Cellular = $("#MobilePhone").val();
+            BP.U_Password = $("#Password").val();
+            BP.EmailAddress = $("#Email").val();
+            BP.PriceListNum = $("#PriceList").val();
+
+            // $("#BPAddresses tr").each(function () {
+            //     var row = $(this);
+            //     var Lineitems = new Object();
+
+
+            //     Lineitems.RowNum = row.find('.rownum').val();
+            //     Lineitems.AddressType = row.find('.AddressType').val();
+            //     Lineitems.AddressName = row.find('.AddressName').val();
+            //     Lineitems.Street = row.find('.Street').val();
+            //     Lineitems.Block = row.find('.Block').val();
+            //     Lineitems.City = row.find('.City').val();
+
+            //     BPAddresses.push(Lineitems);
+            // });
+
+            // BP.BPAddresses = BPAddresses;
+            var ModelData = JSON.stringify(BP)
+            debugger;
+            $.ajax({
+                type: 'Post',
+                url: '/Customer/PostBP',
+                dataType: "json",
+
+                data: ModelData,
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                    if (response.code == 100) {
+                        Swal.fire({
+                            title: "Success",
+                            text: response.message,
+                            icon: "success",
+                            showCancelButton: !0,
+                            customClass: {
+                                confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                                cancelButton: "btn btn-danger w-xs mt-2"
+                            },
+                            confirmButtonText: "Okay",
+                            buttonsStyling: !1,
+                            showCloseButton: !0
+                        }).then(function (t) {
+                            location.reload(true);
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            title: "Error",
+                            text: response.message,
+                            icon: "error",
+                        });
+                    }
+
+                }
+
+
+            });
+        }
+        function updateRequest() {
+            var BP = new Object();
+            var BPAddresses = new Array();
+
+
+            BP.CardType = "cCustomer";
+            BP.CardCode = $("#CardCode").val();
+            BP.CardName = $("#CardName").val();
+            BP.CardForeignName = $("#CardFName").val();
+            BP.GroupCode = $("#GroupCode").val();
+            BP.Phone1 = $("#Tell1").val();
+            BP.Phone2 = $("#Tell2").val();
+            BP.Cellular = $("#MobilePhone").val();
+            BP.U_Password = $("#Password").val();
+            BP.EmailAddress = $("#Email").val();
+            BP.PriceListNum = $("#PriceList").val();
+
+            $("#BPAddresses tr").each(function () {
+                var row = $(this);
+                var Lineitems = new Object();
+
+
+                Lineitems.RowNum = row.find('.rownum').val();
+                Lineitems.AddressType = row.find('.AddressType').val();
+                Lineitems.AddressName = row.find('.AddressName').val();
+                Lineitems.Street = row.find('.Street').val();
+                Lineitems.Block = row.find('.Block').val();
+                Lineitems.City = row.find('.City').val();
+
+                BPAddresses.push(Lineitems);
+            });
+
+            BP.BPAddresses = BPAddresses;
+            var ModelData = JSON.stringify(BP)
+            debugger;
+            $.ajax({
+                type: 'Post',
+                url: '/Customer/updateBP',
+                dataType: "json",
+
+                data: ModelData,
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                    if (response.code == 100) {
+                        Swal.fire({
+                            title: "Success",
+                            text: response.message,
+                            icon: "success",
+                            showCancelButton: !0,
+                            customClass: {
+                                confirmButton: "btn btn-primary w-xs me-2 mt-2",
+                                cancelButton: "btn btn-danger w-xs mt-2"
+                            },
+                            confirmButtonText: "Okay",
+                            buttonsStyling: !1,
+                            showCloseButton: !0
+                        }).then(function (t) {
+                            location.reload(true);
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            title: "Error",
+                            text: response.message,
+                            icon: "error",
+                        });
+                    }
+
+                }
+
+
+            });
+        }
+    </script>
+}
