@@ -756,6 +756,81 @@ namespace B1WEB.Controllers
 
        
        
+        public String GetItemAgainstBarCodeQuery(string barcode)
+        {
+            
+            var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+            var SessionID = HttpContext.Session.GetString("SessionID");
+            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetItemAgainstBarCodeQuery')/List?barcode='" + barcode + "'";
+
+            // Make the request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            httpWebRequest.KeepAlive = true;
+            httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            httpWebRequest.ServicePoint.Expect100Continue = false;
+            httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+            //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            //{
+            //    streamWriter.Write(jsonRequestBody);
+            //}
+
+            // Get the response or handle the error if any
+            using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    
+                 //   var responseInstance = JsonConvert.DeserializeObject<SaleOrderResponseDTO>(result);
+                    return result;
+                    // Process the response as needed
+                }
+            }
+            return  "";
+        }
+
+        
+       
+        public String GetPriceListAgainstCustomerQuery(string cardCode)
+        {
+            
+            var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+            var SessionID = HttpContext.Session.GetString("SessionID");
+            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('SavePriceListAgainstCustomerQuery')/List?cardCode='"+ cardCode + "'";
+
+            // Make the request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            httpWebRequest.KeepAlive = true;
+            httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            httpWebRequest.ServicePoint.Expect100Continue = false;
+            httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+            //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            //{
+            //    streamWriter.Write(jsonRequestBody);
+            //}
+
+            // Get the response or handle the error if any
+            using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    
+                 //   var responseInstance = JsonConvert.DeserializeObject<SaleOrderResponseDTO>(result);
+                    return result;
+                    // Process the response as needed
+                }
+            }
+            return  "";
+        }
+
+       
         public String GetItemDetails(string itemcode)
         {
             

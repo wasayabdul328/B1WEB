@@ -12,6 +12,10 @@ namespace B1WEB.Controllers
         private List<FormsModel> forms = new List<FormsModel>()
                                         {
                                          new FormsModel   { FormName = "SalesOrder", FormId = 1 },
+                                         new FormsModel   { FormName = "SalesReturn", FormId = 2 },
+                                         new FormsModel   { FormName = "ARInvoice", FormId = 3 },
+                                         new FormsModel   { FormName = "ItemMasterData", FormId = 4 },
+                                         new FormsModel   { FormName = "BusinessPartnerMasterDate", FormId = 5 },
                                         };
         public AdministratorController(MyAppContext context)
         {

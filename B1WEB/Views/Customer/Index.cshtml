@@ -215,7 +215,9 @@
     <script>
 
         $(document).ready(function () {
-            $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"] });
+            $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"],
+                "pageLength": 20
+            });
             $("#updatebtn").addClass("hide");
             $("#createbtn").removeClass("hide");
             var logintype = $("#logintype").val();

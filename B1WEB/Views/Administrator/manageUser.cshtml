@@ -29,8 +29,13 @@
                             <div class="flex-shrink-0">
                                 <div class="d-flex gap-2 flex-wrap">
                                     @*    <button class="btn btn-primary" id="remove-actions" onclick="deleteMultiple()" style="display: none;"><i class="ri-delete-bin-2-line"></i></button> *@
-                                    <a class="btn btn-danger" onclick="openmodalAdd()" data-bs-toggle="modal" data-bs-target="#AddUserModal"><i class="ri-add-line align-bottom me-1"></i> Create A User</a>
-                                </div>
+                                    @{
+                                        if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("Isadmin") == "True")
+                                        {
+                                                        <a class="btn btn-danger" onclick="openmodalAdd()" data-bs-toggle="modal" data-bs-target="#AddUserModal"><i class="ri-add-line align-bottom me-1"></i> Create A User</a>
+                                        }
+                                }
+                                        </div>
                             </div>
                         </div>
                         @*   <h5 class="card-title mb-0">  Sales Order List <a style="float:right" href="/Sales/AddSaleOrder" class="btn btn-primary btn-sm"> <i class="ri-file-add-line"></i> Add Sale Order</a></h5> *@
@@ -202,16 +207,16 @@
                                                 int i = 1;
                                                 foreach (var company in ViewBag.CompanyConfiguration)
                                                 {
-                                                    <tr>
-                                                        <td>@i</td>
-                                                        <td class="companyid">@company.ID</td>
-                                                        <td>@company.DatabaseName</td>
-                                                        <td><img src="@company.CompanyLogo" style="height:70px;width:70px;border-radius:50%" /></td>
-                                                        <td>@company.ServiceLayerURL</td>
-                                                        <td>@company.ServiceLayerUsername</td>
-                                                        <td>@company.ServiceLayerPassword</td>
-                                                        <td><input class="isChecked" id='CompanySelected_@company.ID' type="checkbox" /></td>
-                                                    </tr>
+                                                                <tr>
+                                                                    <td>@i</td>
+                                                                    <td class="companyid">@company.ID</td>
+                                                                    <td>@company.DatabaseName</td>
+                                                                    <td><img src="@company.CompanyLogo" style="height:70px;width:70px;border-radius:50%" /></td>
+                                                                    <td>@company.ServiceLayerURL</td>
+                                                                    <td>@company.ServiceLayerUsername</td>
+                                                                    <td>@company.ServiceLayerPassword</td>
+                                                                    <td><input class="isChecked" id='CompanySelected_@company.ID' type="checkbox" /></td>
+                                                                </tr>
 
                                                     i++;
                                                 }
@@ -246,15 +251,15 @@
                                                 int j = 1;
                                                 foreach (var form in ViewBag.Forms)
                                                 {
-                                                    <tr>
-                                                        <td>@j</td>
-                                                        <td class="formid">@form.FormId</td>
-                                                        <td>@form.FormName</td>
-                                                        <td><input class="isCreateChecked" id='CanCreate_@form.FormId' type="checkbox" /></td>
-                                                        <td><input class="isViewChecked" id='CanView_@form.FormId' type="checkbox" /></td>
-                                                        <td><input class="isUpdateChecked" id='CanUpdate_@form.FormId' type="checkbox" /></td>
-                                                        <td><input class="isDeleteChecked" id='CanDelete_@form.FormId' type="checkbox" /></td>
-                                                    </tr>
+                                                                <tr>
+                                                                    <td>@j</td>
+                                                                    <td class="formid">@form.FormId</td>
+                                                                    <td>@form.FormName</td>
+                                                                    <td><input class="isCreateChecked" id='CanCreate_@form.FormId' type="checkbox" /></td>
+                                                                    <td><input class="isViewChecked" id='CanView_@form.FormId' type="checkbox" /></td>
+                                                                    <td><input class="isUpdateChecked" id='CanUpdate_@form.FormId' type="checkbox" /></td>
+                                                                    <td><input class="isDeleteChecked" id='CanDelete_@form.FormId' type="checkbox" /></td>
+                                                                </tr>
 
                                                     j++;
                                                 }
@@ -271,14 +276,20 @@
 
 
 
-                    
+
 
                         </div>
-                       
+
                         <div class="col-lg-12">
                             <div class="hstack gap-2 justify-content-end">
                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                <a onclick="SubmitRequest()" type="submit" class="btn btn-primary" id="submit">Submit</a>
+                                @{
+                                    if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("Isadmin") == "True")
+                                    {
+                                                    <a onclick="SubmitRequest()" class="btn btn-primary" id="submit">Submit</a>
+                                    }
+                                }
+                             
                             </div>
                         </div><!--end col--> 
                      </div><!--end row-->
@@ -292,6 +303,7 @@
 
 <input id="ID" class="hide" type="number" />
 <input id="DeleteID" class="hide" type="number" />
+<input id="isadmincontrol" class="hide" value="@Context.Session.GetString("Isadmin")" type="text" />
 
 @section Script {
     <!--datatable js-->
@@ -547,6 +559,12 @@
                         if (relist != null && relist.length > 0) {
                             var sr = 1;
                             for (let list of relist) {
+                                var isadmincontol = $("#isadmincontrol").val();
+                                var deletebttoncontrol = "";
+                                if (isadmincontol == "true" || isadmincontol == "True") {
+                                    deletebttoncontrol = '<a onclick="DeleteUser(' + list.id + ')" class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a>';
+                                }
+                                debugger;
                                 var row = '<tr>' +
                                     '<td>' + sr + '</td>' +
                                     '<td>' + list.id + '</td>' +
@@ -557,7 +575,11 @@
                                     '<td>' + list.email + '</td>' +
                                     '<td>' + list.phone + '</td>' +
                                     '<td>' + DateFormat(list.createdOn) + '</td>' +
-                                    '<td><a onclick="EditUser(' + list.id + ')" class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a><a onclick="DeleteUser(' + list.id + ')" class="btn btn-sm btn-danger"><i class="ri-delete-bin-fill align-bottom me-2"></i></a></td>' +
+                                    '<td><a onclick="EditUser(' + list.id + ')" class="btn btn-sm btn-primary"><i class="ri-pencil-fill align-bottom me-2"></i></a>'+
+                                        deletebttoncontrol +
+                                    '</td>' +
+                                                    
+                                   
                                     '</tr>';
                                 $("#fixed-headertbody").append(row);
                                 sr++;

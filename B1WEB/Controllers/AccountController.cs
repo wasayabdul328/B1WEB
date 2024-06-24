@@ -16,6 +16,7 @@ using System.Net.Http.Headers;
 using System.Security.Policy;
 using System.IO;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace B1WEB.Controllers
 {
@@ -75,6 +76,8 @@ namespace B1WEB.Controllers
                     HttpContext.Session.SetString("CompanyName", Convert.ToString(companyy.DatabaseName));
                     HttpContext.Session.SetString("ServiceLayerURL", Convert.ToString(ConfiguredAPIUrl));
                     SaveSaleOrderQuery();
+                    SaveItemAgainstBarCodeQuery();
+                    SavePriceListAgainstCustomerQuery();
                     SaveBusinessPartnerQuery();
                     SaveItemsQuery();
                     SaveItemPriceQuery();
@@ -89,7 +92,7 @@ namespace B1WEB.Controllers
                     SaveSaleInvoiceQuery();
                     SaveInventoryItemsQuery();
                     GetImagePath();
-
+                
 
                 }
 
@@ -138,10 +141,26 @@ namespace B1WEB.Controllers
                     }
                     else
                     {
+                        HttpContext.Session.SetString("Isadmin", Convert.ToString(userexist.IsAdmin==true?"true":"false"));
                         HttpContext.Session.SetString("logintype", Convert.ToString(model.logintype));
                         HttpContext.Session.SetString("ID", Convert.ToString(userexist.ID));
                         HttpContext.Session.SetString("UserName", userexist.UserName);
                         HttpContext.Session.SetString("image", userexist.Image);
+
+
+
+                        var viewSaleOrder = _context.UserPermission.Where(x=>x.UserID== userexist.ID && x.FormId==1).FirstOrDefault();
+                        var ViewSaleReturn = _context.UserPermission.Where(x=>x.UserID== userexist.ID && x.FormId==2).FirstOrDefault();
+                        var ViewARInvoice = _context.UserPermission.Where(x=>x.UserID== userexist.ID && x.FormId==3).FirstOrDefault();
+                        var ViewInventory = _context.UserPermission.Where(x=>x.UserID== userexist.ID && x.FormId==4).FirstOrDefault();
+                        var ViewBusinessPartner = _context.UserPermission.Where(x=>x.UserID== userexist.ID && x.FormId==5).FirstOrDefault();
+                       
+                        HttpContext.Session.SetString("ViewSaleOrder", viewSaleOrder.CanView==true?"true":"false");
+                        HttpContext.Session.SetString("ViewSaleReturn", ViewSaleReturn.CanView==true?"true":"false");
+                        HttpContext.Session.SetString("ViewARInvoice", ViewARInvoice.CanView==true?"true":"false");
+                        HttpContext.Session.SetString("ViewInventory", ViewInventory.CanView==true?"true":"false");
+                        HttpContext.Session.SetString("ViewBusinessPartner", ViewBusinessPartner.CanView==true?"true":"false");
+
                         return RedirectToAction("UserCompany");
                     }
                 }
@@ -187,9 +206,14 @@ namespace B1WEB.Controllers
                         {
                             HttpContext.Session.SetString("logintype", Convert.ToString(model.logintype));
                             HttpContext.Session.SetString("ID", Convert.ToString(model.username));
-                           
+                            HttpContext.Session.SetString("Isadmin", Convert.ToString("false"));
                             HttpContext.Session.SetString("CompanyID", Convert.ToString(companyy.ID));
                             HttpContext.Session.SetString("CompanyName", Convert.ToString(companyy.DatabaseName));
+                            HttpContext.Session.SetString("ViewSaleOrder", "true" );
+                            HttpContext.Session.SetString("ViewSaleReturn", "true" );
+                            HttpContext.Session.SetString("ViewARInvoice", "true");
+                            HttpContext.Session.SetString("ViewInventory",  "true");
+                            HttpContext.Session.SetString("ViewBusinessPartner","true");
                             //HttpContext.Session.SetString("image", companyy.CompanyLogo);
                             SaveSaleOrderCustomerQuery();
                             SaveBusinessPartnerCustomerQuery();
@@ -206,6 +230,7 @@ namespace B1WEB.Controllers
                             SaveSaleInvoiceCustomerQuery();
                             SaveInventoryItemsQuery();
                             GetImagePath();
+                            SaveItemAgainstBarCodeQuery();
 
 
                             return RedirectToAction("Index", "Home");
@@ -290,7 +315,16 @@ namespace B1WEB.Controllers
             HttpContext.Session.Remove("SessionID");
             HttpContext.Session.Remove("logintype");
             HttpContext.Session.Remove("PriceList");
+            HttpContext.Session.Remove("Isadmin");
 
+            HttpContext.Session.Remove("ViewSaleOrder");
+            HttpContext.Session.Remove("ViewSaleReturn");
+            HttpContext.Session.Remove("ViewARInvoice");
+            HttpContext.Session.Remove("ViewInventory");
+            HttpContext.Session.Remove("ViewBusinessPartner");
+
+
+    
 
 
             return RedirectToAction("Login");
@@ -1143,6 +1177,72 @@ namespace B1WEB.Controllers
             }
         }
 
+        public void SavePriceListAgainstCustomerQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get Price Lists Against Customer";
+                createQuery.SqlText = "SELECT T0.ListNum FROM OCRD T0 where T0.CardCode=:cardCode";
+                createQuery.SqlCode = "SavePriceListAgainstCustomerQuery";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+
         public void SaveCustomerGroupQuery()
         {
             try
@@ -1348,8 +1448,73 @@ namespace B1WEB.Controllers
                 string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
                 DTOCreateQuery createQuery = new DTOCreateQuery();
                 createQuery.SqlName = "Get All Items";
-                createQuery.SqlText = "select ItemCode,ItemName,PicturName from OITM where ValidFor='Y'";
+                createQuery.SqlText = "select ItemCode,ItemName,CodeBars,PicturName from OITM where ValidFor='Y'";
                 createQuery.SqlCode = "GetSapItems";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+        public void SaveItemAgainstBarCodeQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get Item Against BarCode Query";
+                createQuery.SqlText = "select ItemCode,ItemName from OITM where ValidFor='Y' and CodeBars=:barcode";
+                createQuery.SqlCode = "GetItemAgainstBarCodeQuery";
 
                 string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
 

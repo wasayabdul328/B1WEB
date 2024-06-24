@@ -25,14 +25,24 @@
                         Item Code
                     </th>
                     <th>
+                        BarCode
+                    </th>
+                    <th>
                         Item Description
                     </th>
                     <th>
                         Quantity
                     </th>  
-                    <th>
-                        Tax Code
-                    </th>
+
+                    @{
+                        if (Context.Session.GetString("logintype") == "0")
+                        {
+                            <th>
+                                Tax Code
+                            </th>
+                        }
+                    }
+                   
                     @* @{
                         if (Context.Session.GetString("logintype") == "0")
                         { *@
@@ -156,7 +166,7 @@
                                 </td>
 
                                 <td>
-                                    <button onclick="SelectItem('@value.ItemCode','@value.ItemName')" class="btn btn-sm btn-secondary">
+                                    <button onclick="SelectItem('@value.ItemCode','@value.ItemName','@value.CodeBars')" class="btn btn-sm btn-secondary">
                                         Select
                                     </button>
                                 </td>

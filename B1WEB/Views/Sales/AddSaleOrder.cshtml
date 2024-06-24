@@ -166,35 +166,35 @@
                         @{
                             if (Context.Session.GetString("logintype") == "0")
                             {
-                                                <div class="col-lg-5">
-                                                    <div class="row">
-                                                        <div class="col-6"></div>
-                                                        <div class="col-6">
-                                                            <label for="TotalBeforeDiscount" class="form-label">Total Before Discount</label>
-                                                            <input type="number" disabled class="form-control" id="TotalBeforeDiscount" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <label for="DiscountPercent" class="form-label">Discount Percent</label>
-                                                            <input type="number" class="form-control" id="DiscountPercent" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <label for="DiscountAmount" class="form-label">Discount Amount</label>
-                                                            <input type="number" disabled class="form-control" id="DiscountAmount" />
-                                                        </div>
-                                                        @*   <div class="col-6"></div>
+                                                        <div class="col-lg-5">
+                                                            <div class="row">
+                                                                <div class="col-6"></div>
+                                                                <div class="col-6">
+                                                                    <label for="TotalBeforeDiscount" class="form-label">Total Before Discount</label>
+                                                                    <input type="number" disabled class="form-control" id="TotalBeforeDiscount" />
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label for="DiscountPercent" class="form-label">Discount Percent</label>
+                                                                    <input type="number" class="form-control" id="DiscountPercent" />
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label for="DiscountAmount" class="form-label">Discount Amount</label>
+                                                                    <input type="number" disabled class="form-control" id="DiscountAmount" />
+                                                                </div>
+                                                                @*   <div class="col-6"></div>
                                 <div class="col-6">
                                 <label for="TotalBeforeDiscount" class="form-label">Tax</label>
                                 <input type="number" disabled class="form-control" id="Tax" />
                                 </div> *@
-                                                        <div class="col-6"></div>
-                                                        <div class="col-6">
-                                                            <label for="TotalBeforeDiscount" class="form-label">Total</label>
-                                                            <input type="number" disabled class="form-control" id="Total" />
+                                                                <div class="col-6"></div>
+                                                                <div class="col-6">
+                                                                    <label for="TotalBeforeDiscount" class="form-label">Total</label>
+                                                                    <input type="number" disabled class="form-control" id="Total" />
+                                                                </div>
+                                                            </div>
+
+
                                                         </div>
-                                                    </div>
-
-
-                                                </div>
                             }
                         }
                      
@@ -356,13 +356,18 @@
 
         $(document).ready(function () {
             debugger;
-            $("#fixed-Customer").DataTable();
-            $("#fixed-Items").DataTable();
+            $("#fixed-Customer").DataTable({
+                "pageLength": 20
+            });
+            $("#fixed-Items").DataTable({
+                "pageLength": 20
+            });
             var logintype = $("#logintype").val();
             var cardCode = $("#cardCode").val();
             var cardName = $("#cardName").val();
             if (logintype == "1") {
                 SelectCustomer(cardCode, cardName)
+               
             }
         });
 
@@ -445,20 +450,28 @@
         function AddContentRow() {
             debugger;
             var customerrow = "";
+            var disbalewhecustomer = "";
+            var taxcodetd = "";
             var logintype = $("#logintype").val();
-            
+            var rowno = parseInt($("#contentrowno").val());
+
             if(logintype!="0"){
-                var disbalewhecustomer ="disabled"
+                 disbalewhecustomer ="disabled"
             }
-          
-                var rowno = parseInt($("#contentrowno").val());
+          else{
+                taxcodetd = "<td><div class='input-group input-group'><a class='input-group-text' onclick='OpenTaxCodeModal(" + rowno + ")'><i class='ri-file-list-fill'></i></a><input id='taxcode" + rowno + "' type='text' disabled class='form-control taxcode' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>";
+
+            }
+               
             customerrow = "<td><input " + disbalewhecustomer + " id='unitprice_" + rowno + "' type='number' class='form-control unitprice'/></td><td><input " + disbalewhecustomer + "  type='number' class='form-control discount'/></td><td><input disabled type='number' class='form-control total'/></td>"
 
             var tr = "<tr id='contentrowno_" + rowno + "'><td>" + rowno + "</td>" +
                     "<td><div class='input-group input-group'><a class='input-group-text' onclick='OpenItemModal(" + rowno + ")'><i class='ri-file-list-fill'></i></a><input id='code" + rowno + "' type='text' disabled class='form-control code' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
+                "<td><input onchange='GetItemAgainstBarCodeQuery(" + rowno + ")' id='barcode" + rowno + "'  class='form-control barcode'/></td>" +
                     "<td><input id='description" + rowno + "' disabled class='form-control description'/></td><td><input type='number' class='form-control quantity'/></td>"+
-                "<td><div class='input-group input-group'><a class='input-group-text' onclick='OpenTaxCodeModal(" + rowno + ")'><i class='ri-file-list-fill'></i></a><input id='taxcode" + rowno + "' type='text' disabled class='form-control taxcode' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>" +
-                customerrow+
+                taxcodetd
+                 +
+                customerrow +
                     "<td><i onclick='DeleteRow(" + rowno + ")' class='ri-delete-bin-5-line'></i></td></tr>";
                 $("#tablegridtbody").append(tr);
                 rowno = rowno + 1;
@@ -513,13 +526,15 @@
             $("#CardCode").val(cardCode);
             $("#CardName").val(cardName);
             $("#CustomerlistModal").modal("hide");
-            GetContactPersonAgainstCustomer(cardCode)
+            GetContactPersonAgainstCustomer(cardCode);
+            GetPriceListAgainstCustomerQuery(cardCode);
         }
-        function SelectItem(itemcode,itemname){
+        function SelectItem(itemcode,itemname,barcode){
             debugger;
            var rownum= $("#tempitemrow").val();
             $("#code" + rownum).val(itemcode);
             $("#description" + rownum).val(itemname);
+            $("#barcode" + rownum).val(barcode);
             $("#ItemslistModal").modal("hide");
             var pricelist = $("#pricelist").val();
             GetPriceOfItem(itemcode, pricelist, rownum)
@@ -531,7 +546,46 @@
             $("#taxcode" + rownum).val(taxcode);
             $("#TaxCodesModal").modal("hide");
         }
-     
+
+        function GetPriceListAgainstCustomerQuery(cardCode) {
+          debugger;
+            $.ajax({
+                type: 'GET',
+                url: '/Sales/GetPriceListAgainstCustomerQuery',
+                dataType: "json",
+
+                data: { cardCode: cardCode },
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                    $("#pricelist").val(response.value[0].ListNum);
+                
+                     }
+
+           
+          });
+      }
+        function GetItemAgainstBarCodeQuery( rownum) {
+            var barcode = $("#barcode" + rownum).val();
+            $("#tempitemrow").val(rownum);
+          debugger;
+            $.ajax({
+                type: 'GET',
+                url: '/Sales/GetItemAgainstBarCodeQuery',
+                dataType: "json",
+
+                data: { barcode: barcode },
+                contentType: 'application/json',
+                success: function (response) {
+                    debugger;
+                    $("#code" + rownum).val(response.value[0].ItemCode);
+                    $("#description" + rownum).val(response.value[0].ItemName);
+                    SelectItem(response.value[0].ItemCode, response.value[0].ItemName, barcode)
+                     }
+
+           
+          });
+      }
       function  GetContactPersonAgainstCustomer(cardCode){
           debugger;
             $.ajax({
@@ -566,7 +620,7 @@
                 contentType: 'application/json',
                 success: function (response) {
                     debugger;
-                    var price = response.value[0].price;
+                    var price = parseFloat(response.value[0].price);
                     $("#unitprice_" + rownum).val(price);
                 }
            
@@ -577,6 +631,7 @@
         $('body').on('change', '.unitprice', Calculatetotals);
         $('body').on('change', '.discount', Calculatetotals);
         $('body').on('change', '#DiscountPercent', CalculateFootertotals);
+        // $('body').on('change', '.barcode', GetItemAgainstBarCodeQuery);
 
 
 

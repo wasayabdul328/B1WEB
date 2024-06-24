@@ -236,7 +236,9 @@
     <script>
 
         $(document).ready(function () {
-            $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"] });
+            $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"],
+                "pageLength": 50
+            });
         });
         function GetSingleSalesReturn(docNum) {
             debugger;
