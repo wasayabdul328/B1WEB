@@ -16,6 +16,8 @@ namespace B1WEB.Controllers
                                          new FormsModel   { FormName = "ARInvoice", FormId = 3 },
                                          new FormsModel   { FormName = "ItemMasterData", FormId = 4 },
                                          new FormsModel   { FormName = "BusinessPartnerMasterDate", FormId = 5 },
+                                         new FormsModel   { FormName = "ARCreditNote", FormId = 6 },
+                                         new FormsModel   { FormName = "APCreditNote", FormId = 7 },
                                         };
         public AdministratorController(MyAppContext context)
         {

@@ -95,22 +95,22 @@
                             <a href="/Home/index" class="logo logo-dark">
                                 <span class="logo-sm">
                             @*         <img src="assets/images/logo-sm.png" alt="" height="22"> *@
-                                    <img src="~/sap-business-one-logo.png" alt="" height="22" />
+                                    <img src="~/BWISELOGO-Horizontal.jpg" alt="" height="22" />
                                 </span>
                                 <span class="logo-lg">
                                    @*  <img src="assets/images/logo-dark.png" alt="" height="17"> *@
-                                    <img src="~/sap-business-one-logo.png" alt="" height="17" />
+                                    <img src="~/BWISELOGO-Horizontal.jpg" alt="" height="17" />
                                 </span>
                             </a>
 
                             <a href="/Home/index" class="logo logo-light">
                                 <span class="logo-sm">
                                     @*         <img src="assets/images/logo-sm.png" alt="" height="22"> *@
-                                    <img src="~/sap-business-one-logo.png" alt="" height="22" />
+                                    <img src="~/BWISELOGO-Horizontal.jpg" alt="" height="22" />
                                 </span>
                                 <span class="logo-lg">
                                     @*  <img src="assets/images/logo-dark.png" alt="" height="17"> *@
-                                    <img src="~/sap-business-one-logo.png" alt="" height="17" />
+                                    <img src="~/BWISELOGO-Horizontal.jpg" alt="" height="17" />
                                 </span>
                             </a>
 
@@ -215,7 +215,7 @@
                        SAP
                     </span>
                     <span class="logo-lg">
-                        <img src="~/sap-business-one-logo.png" alt="" height="30" />
+                        <img src="~/BWISELOGO-Horizontal.jpg" alt="" height="40" />
                     </span>
                 </a>
                 <!-- Light Logo-->
@@ -224,7 +224,7 @@
                       SAP
                     </span>
                     <span class="logo-lg">
-                        <img src="~/sap-business-one-logo.png" alt="" height="30" />
+                        <img src="~/BWISELOGO-Horizontal.jpg" alt="" height="40" />
                     </span>
                 </a>
                 <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
@@ -284,47 +284,60 @@
                             }
                         }
 
+                        @if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("ViewSaleReturn") == "true" || Context.Session.GetString("ViewSaleOrder") == "true")
+                        {
 
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarSales" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSales">
-                                <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Sales - A/R</span>
-                            </a>
-                            <div class="collapse menu-dropdown" id="sidebarSales">
-                                <ul class="nav nav-sm flex-column">
-                                    @if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("ViewSaleOrder") == "true")
-                                    {
-                                        <li class="nav-item">
+                            <li class="nav-item">
+                                <a class="nav-link menu-link" href="#sidebarSales" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSales">
+                                    <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Sales - A/R</span>
+                                </a>
+                                <div class="collapse menu-dropdown" id="sidebarSales">
+                                    <ul class="nav nav-sm flex-column">
+                                        @if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("ViewSaleOrder") == "true")
+                                        {
+                                            <li class="nav-item">
 
-                                            <a href="/Sales/SalesOrder" class="nav-link">Sales Order</a>
-                                        </li>
-                                    }
+                                                <a href="/Sales/SalesOrder" class="nav-link">Sales Order</a>
+                                            </li>
+                                        }
 
 
-                                </ul>
-                                <ul class="nav nav-sm flex-column">
-                                    @if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("ViewSaleReturn") == "true")
-                                    {
-                                        <li class="nav-item">
-                                            <a href="/Sales/SalesReturn" class="nav-link">Sales Return</a>
-                                        </li>
-                                    }
-                                </ul>
-                            </div>
-                        </li> <!-- end Sales Menu -->
-                        @if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("ViewARInvoice") == "true")
+                                    </ul>
+                                    <ul class="nav nav-sm flex-column">
+                                        @if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("ViewSaleReturn") == "true")
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/Sales/SalesReturn" class="nav-link">Sales Return</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </li> <!-- end Sales Menu -->
+                        }
+                        @if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("ViewARInvoice") == "true" || Context.Session.GetString("ViewARCreditNote") == "true" || Context.Session.GetString("ViewAPCreditNote") == "true")
                         {
                             <li class="nav-item">
                                 <a class="nav-link menu-link" href="#sidebarInvoice" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarInvoice">
-                                    <i class="ri-layout-3-line"></i> <span data-key="t-layouts">A/R - Invoice</span>
+                                    <i class="ri-layout-3-line"></i> <span data-key="t-layouts"> Invoice</span>
                                 </a>
                                 <div class="collapse menu-dropdown" id="sidebarInvoice">
 
                                     <ul class="nav nav-sm flex-column">
 
-                                        <li class="nav-item">
-                                            <a href="/Sales/ARInvoice" class="nav-link">Invoice</a>
-                                        </li>
+                                        @if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("ViewARInvoice") == "true")
+                                        {
+                                            <li class="nav-item">
+                                                <a href="/Sales/ARInvoice" class="nav-link"> A/R Invoice</a>
+                                            </li>
+                                        }
+                                        @if (Context.Session.GetString("Isadmin") == "true" || Context.Session.GetString("ViewARCreditNote") == "true")
+                                        {
 
+                                            <li class="nav-item">
+                                                <a href="/Sales/ARCreditNote" class="nav-link">A/R Credit Note</a>
+                                            </li>
+                                        }
+                                      
                                     </ul>
 
                                 </div>

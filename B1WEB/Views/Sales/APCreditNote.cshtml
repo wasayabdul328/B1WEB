@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Ar Invoices List";
+    ViewData["Title"] = "AR Credit Notes List";
 }
 
 @section CSS {
@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <h5 style="font-size:32px" class="card-title mb-0 flex-grow-1">A/R Invoice List</h5>
+                            <h5 style="font-size:32px" class="card-title mb-0 flex-grow-1">A/P Credit Note List</h5>
                             <div class="flex-shrink-0">
                                 <div class="d-flex gap-2 flex-wrap">
                                     @*    <button class="btn btn-primary" id="remove-actions" onclick="deleteMultiple()" style="display: none;"><i class="ri-delete-bin-2-line"></i></button> *@
@@ -60,7 +60,7 @@
                                             <td>@value.CardName</td>
                                             <td>@value.DocDate</td>
                                             <td>@value.DocDueDate</td>
-                                            <td style="text-align:right">$@value.DocTotal.ToString("#,##0.00")</td>
+                                            <td>@value.DocTotal</td>
 
                                             <td>
                                                 @{
@@ -99,7 +99,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="CustomerlistModalLabel">Invoice Details</h5>
+                <h5 class="modal-title" id="CustomerlistModalLabel">Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -172,9 +172,9 @@
                                 <div class="row">
                                     <div class="col-2">
                                         <label for="ItmOrServ">Item Type</label>
-                                        <select id="ItmOrServ" class="form-control">
-                                            <option value="item">Item</option>
-                                            @*  <option value="service">Service</option> *@
+                                        <select disabled id="ItmOrServ" class="form-control">
+                                            <option value="I">Item</option>
+                                            <option value="S">Service</option>
                                         </select>
                                     </div>
                                     <div class="col-8"></div>
@@ -190,8 +190,8 @@
                                             <thead class="tablegrid">
                                                 <tr>
                                                     <th>Sr #</th>
-                                                    <th>Item Code</th>
-                                                    <th>Item Description</th>
+                                                    <th>Item Code /  GL Account</th>
+                                                    <th> Description</th>
                                                     <th>Quantity</th>
                                                     <th>Unit Price</th>
                                                     <th>Tax</th>
@@ -200,7 +200,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="tablegridtbody">
-                                               
+
                                                 <!-- Table rows will be dynamically added here -->
                                             </tbody>
                                         </table>
@@ -237,7 +237,8 @@
     <script>
 
         $(document).ready(function () {
-            $("#fixed-header").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"],
+            $("#fixed-header").dataTable({
+                dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"],
                 "pageLength": 20
             });
         });
@@ -245,7 +246,7 @@
             debugger;
             $.ajax({
                 type: 'GET',
-                url: '/Sales/GetSingleSalesInvoice',
+                url: '/Sales/GetSingleAPCreditNote',
                 dataType: "json",
 
                 data: { docNum: docNum },
@@ -257,6 +258,7 @@
                     $("#ContactPerson").val(response.ContactPersonCode);
                     $("#DocNum").val(response.DocNum);
                     $("#Series").val(response.Series);
+                    $("#ItmOrServ").val(response.DocType == "dDocument_Items" ? "I" : "S");
                     $("#CustomerRefNo").val(response.NumAtCard);
                     $("#PostingDate").val(response.DocDate.split("T")[0]);
                     $("#DeliveryDate").val(response.TaxDate.split("T")[0]);
@@ -269,15 +271,16 @@
                     $.each(response.DocumentLines, function (index, item) {
 
                         debugger;
+                        var itemORService = item.ItemCode == null ? item.AccountCode : item.ItemCode;
                         var tr = "<tr>" +
                             "<td>" + sr + "</td>" +
-                            "<td>" + item.ItemCode + "</td>" +
+                            "<td>" + itemORService + "</td>" +
                             "<td>" + item.ItemDescription + "</td>" +
-                            "<td style='text-align:right'>" + item.Quantity + "</td>" +
-                            "<td style='text-align:right'>$" + formatNumber(item.Price) + "</td>" +
-                            "<td style='text-align:right'>" + formatNumber(item.TaxCode) + "</td>" +
-                            "<td style='text-align:right'>" + formatNumber(item.DiscountPercent) + "</td>" +
-                            "<td style='text-align:right'>$" + formatNumber(item.LineTotal) + "</td>" +
+                            "<td>" + item.Quantity + "</td>" +
+                            "<td>" + item.Price + "</td>" +
+                            "<td>" + item.TaxCode + "</td>" +
+                            "<td>" + item.DiscountPercent + "</td>" +
+                            "<td>" + item.LineTotal + "</td>" +
                             "</tr>";
                         $("#tablegridtbody").append(tr)
                         sr++;
@@ -286,12 +289,6 @@
                 }
 
 
-            });
-        }
-        function formatNumber(number) {
-            return number.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
             });
         }
 

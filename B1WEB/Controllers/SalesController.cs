@@ -10,17 +10,41 @@ using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using B1WEB.Common;
 using B1WEB.ActionFilters;
+using B1WEB.DBContext;
 
 namespace B1WEB.Controllers
 {
+
+    [SessionAuthorizationFilter]
     public class SalesController : Controller
     {
-        [SessionAuthorizationFilter]
+
+        private readonly MyAppContext _context;
+
+        public SalesController(MyAppContext context)
+        {
+            _context = context;
+        }
         public IActionResult SalesOrder()
         {
             var salesorder = GetSalesOrders();
             ViewBag.SalesOrders= salesorder.value;
-
+            var logintype = HttpContext.Session.GetString("logintype");
+            if (logintype == "0")
+            {
+                 var userid =Convert.ToInt32 (HttpContext.Session.GetString("ID"));
+                var addAllowed = _context.UserPermission.Where(x => x.UserID == userid && x.FormId == 1).Select(x => x.CanCreate).FirstOrDefault();
+                  var deleteAllowed = _context.UserPermission.Where(x => x.UserID == userid && x.FormId == 1).Select(x => x.CanDelete).FirstOrDefault();
+                ViewBag.CreateAllowed = addAllowed;
+                ViewBag.DeleteAllowed = deleteAllowed;
+            }
+            else
+            {
+                ViewBag.CreateAllowed = true;
+                ViewBag.DeleteAllowed = true;
+            }
+          
+           
             return View();
         }  
         public IActionResult AddSaleOrder()
@@ -55,6 +79,18 @@ namespace B1WEB.Controllers
         public IActionResult ARInvoice()
         {
             var salesInvoice = GetSalesInvoice();
+            ViewBag.SalesInvoice = salesInvoice.value;
+            return View();
+        } 
+        public IActionResult ARCreditNote()
+        {
+            var salesInvoice = GetARCreditNotes();
+            ViewBag.SalesInvoice = salesInvoice.value;
+            return View();
+        }
+        public IActionResult APCreditNote()
+        {
+            var salesInvoice = GetAPCreditNotes();
             ViewBag.SalesInvoice = salesInvoice.value;
             return View();
         }
@@ -188,6 +224,82 @@ namespace B1WEB.Controllers
                 }
             }
             return  saleOrderResponseDTO;
+        }
+
+        public QueryResponseDTO GetARCreditNotes()
+        {
+            string apiUrl = "";
+            var logintype = HttpContext.Session.GetString("logintype");
+            var cardCode = HttpContext.Session.GetString("ID");
+            QueryResponseDTO saleOrderResponseDTO = new QueryResponseDTO();
+            var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+            var SessionID = HttpContext.Session.GetString("SessionID");
+            if (logintype == "0")
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetARCreditNoteQuery')/List";
+            }
+            else
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetARCreditNoteCustomerQuery')/List?cardcode='" + cardCode + "'";
+            }
+            // Make the request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.KeepAlive = true;
+            httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            httpWebRequest.ServicePoint.Expect100Continue = false;
+            httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+            httpWebRequest.Headers.Add("Prefer", $"odata.maxpagesize=10000");
+            using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    var responseInstance = JsonConvert.DeserializeObject<QueryResponseDTO>(result);
+                    return responseInstance;
+                    // Process the response as needed
+                }
+            }
+            return saleOrderResponseDTO;
+        }
+        
+        public QueryResponseDTO GetAPCreditNotes()
+        {
+            string apiUrl = "";
+            var logintype = HttpContext.Session.GetString("logintype");
+            var cardCode = HttpContext.Session.GetString("ID");
+            QueryResponseDTO saleOrderResponseDTO = new QueryResponseDTO();
+            var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+            var SessionID = HttpContext.Session.GetString("SessionID");
+            if (logintype == "0")
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetAPCreditNoteQuery')/List";
+            }
+            else
+            {
+                apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('GetAPCreditNoteCustomerQuery')/List?cardcode='" + cardCode + "'";
+            }
+            // Make the request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.KeepAlive = true;
+            httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            httpWebRequest.ServicePoint.Expect100Continue = false;
+            httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+            httpWebRequest.Headers.Add("Prefer", $"odata.maxpagesize=10000");
+            using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    var responseInstance = JsonConvert.DeserializeObject<QueryResponseDTO>(result);
+                    return responseInstance;
+                    // Process the response as needed
+                }
+            }
+            return saleOrderResponseDTO;
         }
 
         public JsonResult GetContactPersonAgainstCustomer(string cardCode)
@@ -718,6 +830,78 @@ namespace B1WEB.Controllers
         }
         
        
+        public String GetSingleArCreditNote(int docNum)
+        {
+            
+            var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+            var SessionID = HttpContext.Session.GetString("SessionID");
+            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/CreditNotes(" + docNum + ")";
+            
+            // Make the request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            httpWebRequest.KeepAlive = true;
+            httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            httpWebRequest.ServicePoint.Expect100Continue = false;
+            httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+            //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            //{
+            //    streamWriter.Write(jsonRequestBody);
+            //}
+
+            // Get the response or handle the error if any
+            using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    
+                 //   var responseInstance = JsonConvert.DeserializeObject<SaleOrderResponseDTO>(result);
+                    return result;
+                    // Process the response as needed
+                }
+            }
+            return  "";
+        }
+        
+        public String GetSingleAPCreditNote(int docNum)
+        {
+            
+            var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+            var SessionID = HttpContext.Session.GetString("SessionID");
+            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/PurchaseCreditNotes(" + docNum + ")";
+            
+            // Make the request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            httpWebRequest.KeepAlive = true;
+            httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            httpWebRequest.ServicePoint.Expect100Continue = false;
+            httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+            //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            //{
+            //    streamWriter.Write(jsonRequestBody);
+            //}
+
+            // Get the response or handle the error if any
+            using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    
+                 //   var responseInstance = JsonConvert.DeserializeObject<SaleOrderResponseDTO>(result);
+                    return result;
+                    // Process the response as needed
+                }
+            }
+            return  "";
+        }
+        
         public String GetSingleSalesInvoice(int docNum)
         {
             

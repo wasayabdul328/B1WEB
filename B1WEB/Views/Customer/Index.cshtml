@@ -64,6 +64,9 @@
                                             <button onclick="SelectCustomer('@value.CardCode','@value.CardName')" class="btn btn-sm btn-secondary">
                                                 Select
                                             </button>
+                                            <button onclick="ViewAccountStatement('@value.CardCode')" class="btn btn-sm btn-secondary">
+                                                view statement
+                                            </button>
                                         </td>
                                     </tr>
                                     bpcount = bpcount + 1;
@@ -106,7 +109,7 @@
                         <label for="CardFName" class="form-label">Foreign Name</label>
                         <input  class="form-control" id="CardFName" />
                     </div>
-                    <div class="col-4">
+                   @*  <div class="col-4">
                         <label for="GroupCode" class="form-label">Group</label>
                         <select class="form-control" id="GroupCode">
                             @foreach (var item in ViewBag.CustomerGroup.value)
@@ -115,7 +118,7 @@
                             }
 
                         </select>
-                    </div>
+                    </div> *@
                     <hr style="margin-top:10px"/>
                     <div class="col-4">
                         <label for="Tell1" class="form-label">Tell 1</label>
@@ -195,6 +198,55 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal modal-xl" id="ViewAccStatementMOdal" tabindex="-1" aria-labelledby="ViewAccStatementMOdalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ViewAccStatementMOdalLabel">Account Statement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <table id="AccTable" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                            <thead class="tablegrid">
+                                <tr>
+
+                                    <th>Sr #</th>
+                                    <th>Customer Code</th>
+                                    <th>Customer Name</th>
+                                    <th>Transaction ID</th>
+                                    <th>Transaction Date</th>
+                                    <th>Due Date</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                    <th>Balance</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody id="viewAccStatementTbody">
+                              
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+              
+
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <!-- Additional buttons or footer content can be added here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <input hidden type="number" id="adressrowno" value="1" />
 <input id="logintype" value='@Context.Session.GetString("logintype")' hidden />
 @section Script {
@@ -286,7 +338,63 @@
             $("#contentrowno_" + rowno).remove();
         }
 
-        
+
+        function ViewAccountStatement(cardCode) {
+            $("#ViewAccStatementMOdal").modal('show');
+            $.ajax({
+                type: 'GET',
+                url: '/Customer/ViewAccountStatement',
+                dataType: "json",
+
+                data: { cardCode: cardCode },
+                contentType: 'application/json',
+                success: function (response) {
+                    console.log(response);
+                    debugger;
+                    if ($.fn.DataTable.isDataTable("#AccTable")) {
+                        $('#AccTable').DataTable().clear().destroy();
+                    }
+                      $("#viewAccStatementTbody").empty();
+                    var sr = 1;
+                    $.each(response.value, function (index, item) {
+                       var balance=item.Debit-item.Credit;
+                       var TransactionDate = item.TransactionDate;
+                       var DueDate = item.DueDate;
+
+                          var TransactionDateDate = new Date(TransactionDate.slice(0,4), parseInt(TransactionDate.slice(4,6)) - 1, TransactionDate.slice(6));
+                          var DueDateeDate = new Date(DueDate.slice(0,4), parseInt(DueDate.slice(4,6)) - 1, DueDate.slice(6));
+                          var formattedTransDate = formatDate(TransactionDateDate);
+                          var formattedDueDate = formatDate(DueDateeDate);
+
+                        var tr = "<tr>";
+                        tr =tr + "<td>"+sr+"</td>";
+                        tr =tr + "<td>"+item.CustomerCode+"</td>";
+                        tr =tr + "<td>"+item.CustomerName+"</td>";
+                        tr =tr + "<td>"+item.TransactionID+"</td>";
+                        tr =tr + "<td>"+formattedTransDate+"</td>";
+                        tr =tr + "<td>"+formattedDueDate+"</td>";
+                        tr = tr + "<td style='text-align:right;'>$" + formatNumber(item.Debit) + "</td>";
+                        tr = tr + "<td style='text-align:right;'>$" + formatNumber(item.Credit) + "</td>";
+                        tr = tr + "<td style='text-align:right;'>$" + formatNumber(balance) + "</td>";
+                        tr =tr + "<td>"+item.Description+"</td>";
+                        tr =tr + "</tr>";
+
+                        sr = sr + 1;
+                        
+
+                        $("#viewAccStatementTbody").append(tr);
+                    });
+                    $("#AccTable").dataTable({ dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"], "pageLength": 20 });
+                }
+            });
+        }
+        function formatDate(date) {
+  var year = date.getFullYear();
+  var month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading zero for single-digit months
+  var day = String(date.getDate()).padStart(2, '0'); // Add leading zero for single-digit days
+
+  return year + '-' + month + '-' + day;
+}
         function GetCustomerDetails(cardCode) {
             $.ajax({
                 type: 'GET',
@@ -475,6 +583,12 @@
                 }
 
 
+            });
+        }
+        function formatNumber(number) {
+            return number.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
             });
         }
     </script>

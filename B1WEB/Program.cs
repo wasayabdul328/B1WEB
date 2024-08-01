@@ -17,7 +17,7 @@ builder.Services.AddDbContext<MyAppContext>(options =>
     optionsLifetime: ServiceLifetime.Transient);
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(3);
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });

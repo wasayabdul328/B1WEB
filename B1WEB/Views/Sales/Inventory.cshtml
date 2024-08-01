@@ -62,7 +62,7 @@
                                                 <td>@value.ItemCode</td>
                                                 <td>@value.ItemName</td>
                                                 <td>@value.ItmsGrpNam</td>
-                                                <td>@value.LastPurPrc</td>
+                                            <td style="text-align:right">$@value.LastPurPrc.ToString("#,##0.00")</td>
                                                
 
                                                <td>
@@ -207,7 +207,7 @@
                 success: function (response) {
                     debugger;
                     $("#warehouse").val(response.DefaultWarehouse);
-                    $("#unitpricemodal").val(price);
+                    $("#unitpricemodal").val("$" + formatNumber(price));
                     $("#stockinmodal").val(response.QuantityOnStock);
                     $("#itmsCode").val(response.ItemCode);
                     $("#ItmsName").val(response.ItemName);
@@ -234,5 +234,12 @@
 
             });
         }
+        function formatNumber(number) {
+            return number.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
     </script>
                                             }

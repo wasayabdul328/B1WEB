@@ -65,16 +65,16 @@
 
 
                             <label for="PostingDate" class="form-label">Posting Date</label>
-                            <input type="date" class="form-control" id="PostingDate" />
+                            <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" id="PostingDate" />
 
 
                             <label for="DeliveryDate" class="form-label">Delivery Date</label>
-                            <input type="date" class="form-control" id="DeliveryDate" />
+                            <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" id="DeliveryDate" />
 
 
 
                             <label for="DocumentyDate" class="form-label">Document Date</label>
-                            <input type="date" class="form-control" id="DocumentDate" />
+                            <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" id="DocumentDate" />
 
                         </div>
 
@@ -297,11 +297,17 @@
                     <tbody>
                         @{
                             int taxcount = 1;
+                            string taxcode = "";
                         }
 
                         @foreach (var value in ViewBag.TaxCodes.value)
                         {
-                            
+
+                            if (taxcount == 1)
+                            {
+                                taxcode = value.Code;
+                              
+                            }
                             <tr>
                                 <td>
                                     @taxcount
@@ -459,7 +465,7 @@
                  disbalewhecustomer ="disabled"
             }
           else{
-                taxcodetd = "<td><div class='input-group input-group'><a class='input-group-text' onclick='OpenTaxCodeModal(" + rowno + ")'><i class='ri-file-list-fill'></i></a><input id='taxcode" + rowno + "' type='text' disabled class='form-control taxcode' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>";
+                taxcodetd = "<td><div class='input-group input-group'><a class='input-group-text' onclick='OpenTaxCodeModal(" + rowno + ")'><i class='ri-file-list-fill'></i></a><input id='taxcode" + rowno + "' type='text' value='@taxcode' disabled class='form-control taxcode' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm'></div></td>";
 
             }
                

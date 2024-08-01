@@ -86,10 +86,13 @@ namespace B1WEB.Controllers
                     SaveSeriesQuery();
                     SavePriceListQuery();
                     SaveCustomerGroupQuery();
+                    SaveCustomerAccountStatementQuery();
                     SaveSapSalesPersons();
                     SaveQueryForImagePath();
                     SaveSaleReturnQuery();
                     SaveSaleInvoiceQuery();
+                    SaveARCreditNoteQuery();
+                    SaveAPCreditNoteQuery();
                     SaveInventoryItemsQuery();
                     GetImagePath();
                 
@@ -154,12 +157,18 @@ namespace B1WEB.Controllers
                         var ViewARInvoice = _context.UserPermission.Where(x=>x.UserID== userexist.ID && x.FormId==3).FirstOrDefault();
                         var ViewInventory = _context.UserPermission.Where(x=>x.UserID== userexist.ID && x.FormId==4).FirstOrDefault();
                         var ViewBusinessPartner = _context.UserPermission.Where(x=>x.UserID== userexist.ID && x.FormId==5).FirstOrDefault();
+                        var ViewARCreditNote = _context.UserPermission.Where(x=>x.UserID== userexist.ID && x.FormId==6).FirstOrDefault();
+                        var ViewAPCreditNote = _context.UserPermission.Where(x=>x.UserID== userexist.ID && x.FormId==7).FirstOrDefault();
                        
                         HttpContext.Session.SetString("ViewSaleOrder", viewSaleOrder.CanView==true?"true":"false");
                         HttpContext.Session.SetString("ViewSaleReturn", ViewSaleReturn.CanView==true?"true":"false");
                         HttpContext.Session.SetString("ViewARInvoice", ViewARInvoice.CanView==true?"true":"false");
                         HttpContext.Session.SetString("ViewInventory", ViewInventory.CanView==true?"true":"false");
                         HttpContext.Session.SetString("ViewBusinessPartner", ViewBusinessPartner.CanView==true?"true":"false");
+                        HttpContext.Session.SetString("ViewARCreditNote", ViewBusinessPartner.CanView==true?"true":"false"); 
+                        HttpContext.Session.SetString("ViewAPCreditNote", ViewBusinessPartner.CanView==true?"true":"false"); 
+                        
+                       
 
                         return RedirectToAction("UserCompany");
                     }
@@ -213,7 +222,9 @@ namespace B1WEB.Controllers
                             HttpContext.Session.SetString("ViewSaleReturn", "true" );
                             HttpContext.Session.SetString("ViewARInvoice", "true");
                             HttpContext.Session.SetString("ViewInventory",  "true");
-                            HttpContext.Session.SetString("ViewBusinessPartner","true");
+                            HttpContext.Session.SetString("ViewARCreditNote","true");
+                            HttpContext.Session.SetString("ViewAPCreditNote", "true");
+                            HttpContext.Session.SetString("ViewBusinessPartner", "true");
                             //HttpContext.Session.SetString("image", companyy.CompanyLogo);
                             SaveSaleOrderCustomerQuery();
                             SaveBusinessPartnerCustomerQuery();
@@ -228,6 +239,9 @@ namespace B1WEB.Controllers
                             SaveQueryForImagePath();
                             SaveSaleReturnCustomerQuery();
                             SaveSaleInvoiceCustomerQuery();
+                            SaveCustomerAccountStatementQuery();
+                            SaveARCreditNoteCustomerQuery();
+                            SaveAPCreditNoteCustomerQuery();
                             SaveInventoryItemsQuery();
                             GetImagePath();
                             SaveItemAgainstBarCodeQuery();
@@ -322,6 +336,8 @@ namespace B1WEB.Controllers
             HttpContext.Session.Remove("ViewARInvoice");
             HttpContext.Session.Remove("ViewInventory");
             HttpContext.Session.Remove("ViewBusinessPartner");
+            HttpContext.Session.Remove("ViewARCreditNote");
+            HttpContext.Session.Remove("ViewAPCreditNote");
 
 
     
@@ -655,7 +671,139 @@ namespace B1WEB.Controllers
             }
         }
 
-              public void SaveSaleInvoiceCustomerQuery()
+        public void SaveARCreditNoteQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get AR Credit Note Query";
+                createQuery.SqlText = "select  DocNum,DocEntry,CardCode,CardName,DocDate,DocDueDate,DocStatus ,DocTotal from ORIN Where DocStatus='O'";
+                createQuery.SqlCode = "GetARCreditNoteQuery";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+        
+        public void SaveAPCreditNoteQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get AP Credit Note Query";
+                createQuery.SqlText = "select  DocNum,DocEntry,CardCode,CardName,DocDate,DocDueDate,DocStatus ,DocTotal from ORPC Where DocStatus='O'";
+                createQuery.SqlCode = "GetAPCreditNoteQuery";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+
+        public void SaveSaleInvoiceCustomerQuery()
         {
             try
             {
@@ -666,6 +814,208 @@ namespace B1WEB.Controllers
                 createQuery.SqlName = "Get All Sales Invoices Customer";
                 createQuery.SqlText = "select  DocNum,DocEntry,CardCode,CardName,DocDate,DocDueDate,DocStatus ,DocTotal from OINV Where DocStatus='O' and CardCode=:cardcode";
                 createQuery.SqlCode = "GetSalesInvoicesCustomer";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+
+
+        public void SaveCustomerAccountStatementQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Save Customer Account Statement Query";
+                createQuery.SqlText = "SELECT T0.CardCode AS CustomerCode, T0.CardName AS CustomerName, T1.TransId AS TransactionID, T1.RefDate AS TransactionDate, T1.DueDate AS DueDate,T2.Debit,T2.Credit, T2.LineMemo AS Description FROM OCRD T0 JOIN JDT1 T2 ON T0.CardCode = T2.ShortName JOIN OJDT T1 ON T2.TransId = T1.TransId WHERE T0.CardCode =: cardcode ORDER BY T1.RefDate";
+                createQuery.SqlCode = "SaveCustomerAccountStatementQuery";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+
+
+
+        public void SaveARCreditNoteCustomerQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get AR Credit Note Customer Query";
+                createQuery.SqlText = "select  DocNum,DocEntry,CardCode,CardName,DocDate,DocDueDate,DocStatus ,DocTotal from ORIN Where DocStatus='O' and CardCode=:cardcode";
+                createQuery.SqlCode = "GetARCreditNoteCustomerQuery";
+
+                string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
+
+                // Make the request
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                httpWebRequest.KeepAlive = true;
+                httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                httpWebRequest.ServicePoint.Expect100Continue = false;
+                httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(jsonRequestBody);
+                }
+
+                // Get the response or handle the error if any
+                using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        var responseInstance = JsonConvert.DeserializeObject<DTOResponseCreateQuery>(result);
+                        // Process the response as needed
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Response != null && webEx.Response is HttpWebResponse httpWebResponse)
+                {
+                    if (httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        // Handle bad request (HTTP 400) error
+                        // You can retrieve more details from the response if needed
+                        using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                        {
+                            var errorResponse = streamReader.ReadToEnd();
+                            var responseInstance = JsonConvert.DeserializeObject<ErrorResponse>(errorResponse);
+                            // Handle the error response
+                        }
+                    }
+                    else
+                    {
+                        // Handle other HTTP errors
+                    }
+                }
+                else
+                {
+                    // Handle other types of exceptions or network errors
+                }
+            }
+        }
+
+
+        public void SaveAPCreditNoteCustomerQuery()
+        {
+            try
+            {
+                var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+                var SessionID = HttpContext.Session.GetString("SessionID");
+                string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries";
+                DTOCreateQuery createQuery = new DTOCreateQuery();
+                createQuery.SqlName = "Get AP Credit Note Customer Query";
+                createQuery.SqlText = "select  DocNum,DocEntry,CardCode,CardName,DocDate,DocDueDate,DocStatus ,DocTotal from ORPC Where DocStatus='O' and CardCode=:cardcode";
+                createQuery.SqlCode = "GetAPCreditNoteCustomerQuery";
 
                 string jsonRequestBody = JsonConvert.SerializeObject(createQuery);
 

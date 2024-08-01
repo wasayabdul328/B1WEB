@@ -16,7 +16,7 @@ namespace B1WEB.Controllers
 
 
             ViewBag.BusinessPartners =GetBusinessPartners();
-            ViewBag.CustomerGroup = GetCustomerGroupSeries();
+            //ViewBag.CustomerGroup = GetCustomerGroupSeries();
             ViewBag.PriceList = GetPriceLists();
             return View();
         }
@@ -341,6 +341,44 @@ namespace B1WEB.Controllers
             return Json(apiResponse);
         }
 
+
+
+
+        public String ViewAccountStatement(string cardCode)
+        {
+
+            var ConfiguredAPIUrl = HttpContext.Session.GetString("ServiceLayerURL");
+            var SessionID = HttpContext.Session.GetString("SessionID");
+            string apiUrl = ConfiguredAPIUrl + "/b1s/v1/SQLQueries('SaveCustomerAccountStatementQuery')/List?cardcode='" + cardCode + "'";
+
+            // Make the request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+            httpWebRequest.KeepAlive = true;
+            httpWebRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            httpWebRequest.ServicePoint.Expect100Continue = false;
+            httpWebRequest.Headers.Add("Cookie", $"B1SESSION={SessionID}");
+            httpWebRequest.Headers.Add("Prefer", $"odata.maxpagesize=100000");
+            //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            //{
+            //    streamWriter.Write(jsonRequestBody);
+            //}
+
+            // Get the response or handle the error if any
+            using (var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse())
+            {
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+
+                    //   var responseInstance = JsonConvert.DeserializeObject<SaleOrderResponseDTO>(result);
+                    return result;
+                    // Process the response as needed
+                }
+            }
+            return "";
+        }
 
     }
 }

@@ -59,7 +59,7 @@
                                                     <td>@value.CardName</td>
                                                     <td>@value.DocDate</td>
                                                     <td>@value.DocDueDate</td>
-                                                    <td>@value.DocTotal</td>
+                                            <td style="text-align:right">$@value.DocTotal.ToString("#,##0.00")</td>
 
                                                     <td>
                                                         @{
@@ -273,10 +273,10 @@
                             "<td>" + item.ItemCode + "</td>" +
                             "<td>" + item.ItemDescription + "</td>" +
                             "<td>" + item.Quantity + "</td>" +
-                            "<td>" + item.Price + "</td>" +
+                            "<td>$" + formatNumber(item.Price) + "</td>" +
                             "<td>" + item.TaxCode + "</td>" +
                             "<td>" + item.DiscountPercent + "</td>" +
-                            "<td>" + item.LineTotal + "</td>" +
+                            "<td>$" + formatNumber(item.LineTotal) + "</td>" +
                             "</tr>";
                         $("#tablegridtbody").append(tr)
                         sr++;
@@ -287,6 +287,13 @@
 
             });
         }
+        function formatNumber(number) {
+            return number.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+     
 
     </script>
 }

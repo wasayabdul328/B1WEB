@@ -193,20 +193,20 @@
                                                                 <td>
                                                                     @lineitems.ItemDescription
                                                                 </td>
-                                                                <td>
+                                                        <td style="text-align:right">
                                                                     @lineitems.Quantity
                                                                 </td>
-                                                                <td>
-                                                                    @lineitems.Price
+                                                        <td style="text-align:right">
+                                                            @lineitems.Price.ToString("#,##0.00")
                                                                 </td>
-                                                                <td>
-                                                                    @lineitems.TaxTotal
+                                                        <td style="text-align:right">
+                                                            @lineitems.TaxTotal.ToString("#,##0.00")
                                                                 </td>
-                                                                <td>
+                                                        <td style="text-align:right">
                                                                     @lineitems.DiscountPercent
                                                                 </td>
-                                                                <td>
-                                                                    @lineitems.LineTotal
+                                                        <td style="text-align:right">
+                                                            @lineitems.LineTotal.ToString("#,##0.00")
                                                                 </td>
 
                                                             </tr>
@@ -339,25 +339,25 @@
                                     @{
                                         var totalbeforediscount = ViewBag.SingleSaleOrder.DocTotal + ViewBag.SingleSaleOrder.TotalDiscount - ViewBag.SingleSaleOrder.VatSum;
                                     }
-                                    <input value="@totalbeforediscount" type="number" disabled class="form-control" id="TotalBeforeDiscount" />
+                                    <input value="$@totalbeforediscount.ToString("#,##0.00")" type="text" disabled class="form-control" id="TotalBeforeDiscount" />
                                 </div>
                                 <div class="col-6">
                                     <label for="DiscountPercent" class="form-label">Discount Percent</label>
-                                    <input disabled value="@ViewBag.SingleSaleOrder.DiscountPercent" type="number" class="form-control" id="DiscountPercent" />
+                                    <input disabled value="@ViewBag.SingleSaleOrder.DiscountPercent" type="text" class="form-control" id="DiscountPercent" />
                                 </div>
                                 <div class="col-6">
                                     <label for="DiscountAmount" class="form-label">Discount Amount</label>
-                                    <input disabled value="@ViewBag.SingleSaleOrder.TotalDiscount" type="number" class="form-control" id="DiscountAmount" />
+                                    <input disabled value="$@ViewBag.SingleSaleOrder.TotalDiscount.ToString("#,##0.00")" type="text" class="form-control" id="DiscountAmount" />
                                 </div>
                                 <div class="col-6"></div>
                                 <div class="col-6">
                                     <label for="TotalBeforeDiscount" class="form-label">Tax</label>
-                                    <input disabled value="@ViewBag.SingleSaleOrder.VatSum" type="number" disabled class="form-control" id="Tax" />
+                                    <input disabled value="$@ViewBag.SingleSaleOrder.VatSum.ToString("#,##0.00")" type="text"  class="form-control" id="Tax" />
                                 </div>
                                 <div class="col-6"></div>
                                 <div class="col-6">
                                     <label for="TotalBeforeDiscount" class="form-label">Total</label>
-                                    <input disabled value="@ViewBag.SingleSaleOrder.DocTotal" type="number" disabled class="form-control" id="Total" />
+                                    <input disabled value="$@ViewBag.SingleSaleOrder.DocTotal.ToString("#,##0.00")" type="text"  class="form-control" id="Total" />
                                 </div>
                             </div>
 
